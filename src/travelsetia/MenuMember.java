@@ -39,8 +39,8 @@ public class MenuMember extends javax.swing.JPanel {
 
         jLabel2.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Master Data > Member");
-        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 0, 180, 30));
+        jLabel2.setText("Master Data > Penumpang");
+        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 0, 210, 30));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -59,7 +59,7 @@ public class MenuMember extends javax.swing.JPanel {
 
         iconMember.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         iconMember.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/People.png"))); // NOI18N
-        add(iconMember, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 0, -1, 30));
+        add(iconMember, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 0, -1, 30));
 
         jButton5.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jButton5.setForeground(new java.awt.Color(102, 153, 255));
