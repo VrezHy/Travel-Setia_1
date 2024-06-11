@@ -2,22 +2,92 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package travelsetia;
 
+package travelsetia;
+import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 /**
  *
  * @author dimas
  */
 public class Login1 extends javax.swing.JFrame {
-
+    private Connection conn;
     /**
      * Creates new form Login1
      */
-    public Login1() {
+   public Login1() {
         initComponents();
-        txtEmail.setBackground(new java.awt.Color(0,0,0,1));
-        txtPassword.setBackground(new java.awt.Color(0,0,0,1));
+        txtEmail.setBackground(new java.awt.Color(0, 0, 0, 1));
+        txtPassword.setBackground(new java.awt.Color(0, 0, 0, 1));
+        conn = Koneksi.bukaKoneksi();
     }
+
+    private static boolean ambilDataAkun(String email, String password) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        boolean loggedIn = false;
+
+        try {
+            conn = Koneksi.bukaKoneksi();
+            if (conn != null) {
+                String query = "SELECT * FROM akun WHERE email = ? AND userPassword = ? ";
+                ps = conn.prepareStatement(query);
+
+                ps.setString(1, email);
+                ps.setString(2, password);
+
+                rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    loggedIn = true;
+                } else {
+                    // Incorrect email or password
+
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("An error occurred: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return loggedIn;
+    }
+
+    private static String cekStatusString(String email, String password) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = Koneksi.bukaKoneksi();
+            if (conn != null) {
+                String query = "SELECT statusAkun FROM akun WHERE email = ? AND userPassword = ? ";
+                ps = conn.prepareStatement(query);
+
+                ps.setString(1, email);
+                ps.setString(2, password);
+
+                rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    String status = rs.getString("statusAkun");
+                    System.out.print(status);
+                    return status;
+                } else {
+                    // Incorrect email or password
+
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("An error occurred: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return "data kosong";
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -213,6 +283,32 @@ public class Login1 extends javax.swing.JFrame {
 
     private void btLoginLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoginLoginActionPerformed
         // TODO add your handling code here:
+        String email = txtEmail.getText();
+        String password = txtPassword.getText();
+        String status;
+//        String emailAdmin = txtEmail.getText();
+//        String passwordAdmin = txtPassword.getText();
+
+        if (email.equals("") || password.equals("")) {
+            JOptionPane.showMessageDialog(this, "isi yang kosong!");
+        } else {
+
+            if (ambilDataAkun(email, password)) {
+                status = cekStatusString(email, password);
+
+                if (status.equals("admin")) {
+                    MenuAdmin JFrameMenuAdmin = new MenuAdmin();
+                    this.dispose();
+                    JFrameMenuAdmin.setVisible(true);
+                } else {
+                    MenuCustomer JFrameMenu = new MenuCustomer();
+                    this.dispose();
+                    JFrameMenu.setVisible(true);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Email atau password salah!");
+            }
+        }
     }//GEN-LAST:event_btLoginLoginActionPerformed
 
     private void minimizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minimizeMouseClicked

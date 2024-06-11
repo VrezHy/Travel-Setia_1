@@ -3,6 +3,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package travelsetia;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList; 
 
 /**
  *
@@ -11,12 +22,50 @@ package travelsetia;
 public class MenuCustomer extends javax.swing.JFrame {
 
     /**
-     * Creates new form MenuCustomer
+     * Creates new form MenuCustomer 
      */
+  
+    
+    private DefaultTableModel model = new DefaultTableModel();
+    private Connection conn;
+
     public MenuCustomer() {
         initComponents();
-        txtCariPenerbangan.setBackground(new java.awt.Color(0,0,0,1));
-        txtTotalBayar.setBackground(new java.awt.Color(0,0,0,1));
+        txtCariPenerbangan.setBackground(new java.awt.Color(0, 0, 0, 1));
+        txtTotalBayar.setBackground(new java.awt.Color(0, 0, 0, 1));
+        conn = Koneksi.bukaKoneksi();
+        String sql = "SELECT p.idPesawat, p.namaPesawat, b.idBandara, b.namaBandara AS kotaKeberangkatan, p.destinasi, p.statusKursi, p.harga, jp.tanggalKeberangkatan\n"
+                + "FROM pesawat p \n"
+                + "LEFT JOIN booking bo ON p.idPesawat = bo.idPesawat \n"
+                + "LEFT JOIN bandara b ON p.destinasi = b.kota\n"
+                + "LEFT JOIN jadwalpenerbangan jp ON p.idPesawat = jp.idPesawat\n"
+                + "ORDER BY jp.tanggalKeberangkatan ASC;";
+        try {
+            PreparedStatement pst = conn.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+
+            // Process the ResultSet and display data in JTable
+            DefaultTableModel model = new DefaultTableModel();
+            model.setColumnIdentifiers(new Object[]{"ID Pesawat", "Nama Pesawat", "Kota Keberangkatan", "Destinasi", "Tanggal Keberangkatan", "Status Kursi", "Harga"});
+
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getInt("idPesawat"),
+                    rs.getString("namaPesawat"),
+                    rs.getString("kotaKeberangkatan"),
+                    rs.getString("destinasi"),
+                    rs.getString("tanggalKeberangkatan"),
+                    rs.getString("statusKursi"),
+                    rs.getInt("harga")
+                });
+            }
+
+            // Set the model to your JTable
+            jTablePesawat.setModel(model);
+
+        } catch (Exception ex) {
+            System.out.println("Error : " + ex.getMessage());
+        }
     }
 
     /**
@@ -50,17 +99,17 @@ public class MenuCustomer extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
+        tfff9 = new javax.swing.JPanel();
         txtTotalBayar = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jLabel15 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
-        jTextField8 = new javax.swing.JTextField();
-        jTextField9 = new javax.swing.JTextField();
-        jTextField10 = new javax.swing.JTextField();
-        jTextField11 = new javax.swing.JTextField();
+        tfMaskapai = new javax.swing.JTextField();
+        tfKotaKeberangkatan = new javax.swing.JTextField();
+        tfDestinasi = new javax.swing.JTextField();
+        tfTanggalBerangkat = new javax.swing.JTextField();
+        tfStatusKursi = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
@@ -68,7 +117,7 @@ public class MenuCustomer extends javax.swing.JFrame {
         jLabel19 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        jTablePesawat = new javax.swing.JTable();
         txtCariPenerbangan = new javax.swing.JTextField();
         jButton5 = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
@@ -230,8 +279,8 @@ public class MenuCustomer extends javax.swing.JFrame {
         jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel3.setBackground(new java.awt.Color(53, 114, 239));
-        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        tfff9.setBackground(new java.awt.Color(53, 114, 239));
+        tfff9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         txtTotalBayar.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         txtTotalBayar.setForeground(new java.awt.Color(255, 255, 255));
@@ -241,13 +290,13 @@ public class MenuCustomer extends javax.swing.JFrame {
                 txtTotalBayarActionPerformed(evt);
             }
         });
-        jPanel3.add(txtTotalBayar, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 230, 280, 40));
+        tfff9.add(txtTotalBayar, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 230, 280, 40));
 
         jLabel1.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Status Kursi");
-        jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(82, 230, 110, 40));
+        tfff9.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(82, 230, 110, 40));
 
         jButton4.setText("Pesan Sekarang");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -255,74 +304,74 @@ public class MenuCustomer extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 280, 128, -1));
+        tfff9.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 280, 128, -1));
 
         jButton6.setText("Cetak Pembayaran");
-        jPanel3.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 310, -1, -1));
+        tfff9.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 310, -1, -1));
 
         jLabel15.setForeground(new java.awt.Color(255, 255, 255));
         jLabel15.setText("___________________________________________________________");
-        jPanel3.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 260, 290, -1));
+        tfff9.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 260, 290, -1));
 
-        jTextField7.addActionListener(new java.awt.event.ActionListener() {
+        tfMaskapai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField7ActionPerformed(evt);
+                tfMaskapaiActionPerformed(evt);
             }
         });
-        jPanel3.add(jTextField7, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 30, 370, 40));
-        jPanel3.add(jTextField8, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 80, 370, 40));
+        tfff9.add(tfMaskapai, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 30, 370, 40));
+        tfff9.add(tfKotaKeberangkatan, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 80, 370, 40));
 
-        jTextField9.addActionListener(new java.awt.event.ActionListener() {
+        tfDestinasi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField9ActionPerformed(evt);
+                tfDestinasiActionPerformed(evt);
             }
         });
-        jPanel3.add(jTextField9, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 130, 370, 40));
-        jPanel3.add(jTextField10, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 180, 370, 40));
+        tfff9.add(tfDestinasi, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 130, 370, 40));
+        tfff9.add(tfTanggalBerangkat, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 180, 370, 40));
 
-        jTextField11.addActionListener(new java.awt.event.ActionListener() {
+        tfStatusKursi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField11ActionPerformed(evt);
+                tfStatusKursiActionPerformed(evt);
             }
         });
-        jPanel3.add(jTextField11, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 230, 370, 40));
+        tfff9.add(tfStatusKursi, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 230, 370, 40));
 
         jLabel3.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Total Bayar");
-        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 200, 100, 30));
+        tfff9.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 200, 100, 30));
 
         jLabel16.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(255, 255, 255));
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel16.setText("Maskapai");
-        jPanel3.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(112, 30, 80, 40));
+        tfff9.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(112, 30, 80, 40));
 
         jLabel17.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jLabel17.setForeground(new java.awt.Color(255, 255, 255));
         jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel17.setText("Lokasi Keberangkatan");
-        jPanel3.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 80, 180, 40));
+        tfff9.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 80, 180, 40));
 
         jLabel18.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jLabel18.setForeground(new java.awt.Color(255, 255, 255));
         jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel18.setText("Destinasi");
-        jPanel3.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(112, 130, 80, 40));
+        tfff9.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(112, 130, 80, 40));
 
         jLabel19.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jLabel19.setForeground(new java.awt.Color(255, 255, 255));
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel19.setText("Tanggal Berangkat");
-        jPanel3.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(32, 180, 160, 40));
+        tfff9.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(32, 180, 160, 40));
 
-        jPanel5.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 220, 990, 360));
+        jPanel5.add(tfff9, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 220, 990, 360));
 
         jLabel14.setForeground(new java.awt.Color(255, 255, 255));
         jLabel14.setText("___________________________________________________________");
         jPanel5.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 40, 290, -1));
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        jTablePesawat.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -333,7 +382,12 @@ public class MenuCustomer extends javax.swing.JFrame {
                 "Maskapai", "Lokasi Keberangkatan", "Destinasi", "Tanggal Keberangkatan", "Status Kursi"
             }
         ));
-        jScrollPane3.setViewportView(jTable3);
+        jTablePesawat.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTablePesawatMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(jTablePesawat);
 
         jPanel5.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 60, 990, 140));
 
@@ -458,17 +512,35 @@ public class MenuCustomer extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTotalBayarActionPerformed
 
-    private void jTextField7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField7ActionPerformed
+    private void tfMaskapaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfMaskapaiActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField7ActionPerformed
+    }//GEN-LAST:event_tfMaskapaiActionPerformed
 
-    private void jTextField9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField9ActionPerformed
+    private void tfDestinasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfDestinasiActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField9ActionPerformed
+    }//GEN-LAST:event_tfDestinasiActionPerformed
 
-    private void jTextField11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField11ActionPerformed
+    private void tfStatusKursiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfStatusKursiActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField11ActionPerformed
+    }//GEN-LAST:event_tfStatusKursiActionPerformed
+
+    private void jTablePesawatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablePesawatMouseClicked
+        int row = jTablePesawat.getSelectedRow();
+        DefaultTableModel model = (DefaultTableModel) jTablePesawat.getModel();
+        String namaPesawat = model.getValueAt(row, 1) != null ? model.getValueAt(row, 1).toString() : "";
+        String kotaKeberangkatan = model.getValueAt(row, 2) != null ? model.getValueAt(row, 2).toString() : "";
+        String destinasi = model.getValueAt(row, 3) != null ? model.getValueAt(row, 3).toString() : "";
+        String waktuKeberangkatan = model.getValueAt(row, 4) != null ? model.getValueAt(row, 4).toString() : "";
+        String statusKursi = model.getValueAt(row, 5) != null ? model.getValueAt(row, 5).toString() : "";
+        String harga = model.getValueAt(row, 6) != null ? model.getValueAt(row, 6).toString() : "";
+
+        tfMaskapai.setText(namaPesawat);
+        tfKotaKeberangkatan.setText(kotaKeberangkatan);
+        tfDestinasi.setText(destinasi);
+        tfTanggalBerangkat.setText(waktuKeberangkatan);
+        tfStatusKursi.setText(statusKursi);
+        txtTotalBayar.setText(harga);
+    }//GEN-LAST:event_jTablePesawatMouseClicked
 
     /**
      * @param args the command line arguments
@@ -537,22 +609,22 @@ public class MenuCustomer extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable3;
+    private javax.swing.JTable jTablePesawat;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField10;
-    private javax.swing.JTextField jTextField11;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
     private javax.swing.JLabel minimize;
+    private javax.swing.JTextField tfDestinasi;
+    private javax.swing.JTextField tfKotaKeberangkatan;
+    private javax.swing.JTextField tfMaskapai;
+    private javax.swing.JTextField tfStatusKursi;
+    private javax.swing.JTextField tfTanggalBerangkat;
+    private javax.swing.JPanel tfff9;
     private javax.swing.JTextField txtCariPenerbangan;
     private javax.swing.JTextField txtTotalBayar;
     // End of variables declaration//GEN-END:variables

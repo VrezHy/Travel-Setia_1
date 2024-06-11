@@ -3,6 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package travelsetia;
+import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet; 
+import java.sql.SQLException;
 
 /**
  *
@@ -10,13 +16,57 @@ package travelsetia;
  */
 public class register1 extends javax.swing.JFrame {
 
-    /**
-     * Creates new form register1
-     */
+    private Connection conn;
+    
+    
+    
     public register1() {
         initComponents();
+        conn = Koneksi.bukaKoneksi();
     }
+    
+    private  static void saveDataAkun (String Nama, String jenisKelamin, String kewarganegaraan, String noHP, String email, String tanggalLahir, String password, String statusAkun){
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        try {
+            conn = Koneksi.bukaKoneksi();
+            if (conn != null) {
+                
+                String periksaQuery = "SELECT COUNT(*) FROM akun WHERE email = ?";
+                ps = conn.prepareStatement(periksaQuery);
+                ps.setString(1, email);
+                rs = ps.executeQuery();
+            
+                if(rs.next() && rs.getInt(1) > 0 ){
+                    JOptionPane.showMessageDialog(null, "Email sudah terdaftar!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                
+                String query = "INSERT INTO akun (namaPenumpang, jenisKelamin, kewarganegaraan, nomorTelepon, email, tglLahir, userPassword, statusAkun) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)";
+                ps = conn.prepareStatement(query);
 
+                ps.setString(1, Nama);
+                ps.setString(2, jenisKelamin);
+                ps.setString(3, kewarganegaraan);
+                ps.setString(4, noHP);
+                ps.setString(5, email);
+                ps.setString(6, tanggalLahir);
+                ps.setString(7, password);
+                ps.setString(8, statusAkun);
+                
+                int hasil = ps.executeUpdate();
+               
+                
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+            e.printStackTrace();
+        } 
+
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -38,19 +88,19 @@ public class register1 extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         tfJenisKelaminRegister = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        tfJenisKelaminRegister2 = new javax.swing.JTextField();
+        tfKewarganegaraanRegister = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        tfJenisKelaminRegister1 = new javax.swing.JTextField();
+        tfNohpRegister = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        tfJenisKelaminRegister3 = new javax.swing.JTextField();
+        tfTanggalLahirRegister = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        tfJenisKelaminRegister4 = new javax.swing.JTextField();
+        tfEmailRegister = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        txtPasswordRegister = new javax.swing.JPasswordField();
+        tfPasswordRegister = new javax.swing.JPasswordField();
         btLoginRegister = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
         LoginRegister = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        tfNamaRegister = new javax.swing.JTextField();
         invisible2 = new javax.swing.JLabel();
         show2 = new javax.swing.JLabel();
         BackroundBali = new javax.swing.JLabel();
@@ -131,8 +181,8 @@ public class register1 extends javax.swing.JFrame {
         jLabel8.setText("Kewarganegaraan");
         jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 240, -1, -1));
 
-        tfJenisKelaminRegister2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanel1.add(tfJenisKelaminRegister2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 260, 207, 30));
+        tfKewarganegaraanRegister.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel1.add(tfKewarganegaraanRegister, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 260, 207, 30));
 
         jLabel3.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -140,8 +190,8 @@ public class register1 extends javax.swing.JFrame {
         jLabel3.setText("No HP");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 300, -1, -1));
 
-        tfJenisKelaminRegister1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanel1.add(tfJenisKelaminRegister1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 320, 207, 30));
+        tfNohpRegister.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel1.add(tfNohpRegister, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 320, 207, 30));
 
         jLabel12.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(255, 255, 255));
@@ -149,8 +199,8 @@ public class register1 extends javax.swing.JFrame {
         jLabel12.setText("Tanggal Lahir");
         jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 360, -1, -1));
 
-        tfJenisKelaminRegister3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanel1.add(tfJenisKelaminRegister3, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 380, 207, 30));
+        tfTanggalLahirRegister.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel1.add(tfTanggalLahirRegister, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 380, 207, 30));
 
         jLabel4.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
@@ -158,8 +208,13 @@ public class register1 extends javax.swing.JFrame {
         jLabel4.setText("Email");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 420, -1, -1));
 
-        tfJenisKelaminRegister4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanel1.add(tfJenisKelaminRegister4, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 440, 207, 30));
+        tfEmailRegister.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        tfEmailRegister.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfEmailRegisterActionPerformed(evt);
+            }
+        });
+        jPanel1.add(tfEmailRegister, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 440, 207, 30));
 
         jLabel5.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
@@ -167,8 +222,8 @@ public class register1 extends javax.swing.JFrame {
         jLabel5.setText("Password");
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 480, -1, 20));
 
-        txtPasswordRegister.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanel1.add(txtPasswordRegister, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 500, 207, 33));
+        tfPasswordRegister.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel1.add(tfPasswordRegister, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 500, 207, 33));
 
         btLoginRegister.setBackground(new java.awt.Color(53, 114, 239));
         btLoginRegister.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -198,13 +253,13 @@ public class register1 extends javax.swing.JFrame {
         });
         jPanel1.add(LoginRegister, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 590, -1, 24));
 
-        jTextField1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        tfNamaRegister.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        tfNamaRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                tfNamaRegisterActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 140, 210, 30));
+        jPanel1.add(tfNamaRegister, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 140, 210, 30));
 
         invisible2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/Invisible.png"))); // NOI18N
         invisible2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -232,7 +287,24 @@ public class register1 extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btLoginRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoginRegisterActionPerformed
-        // TODO add your handling code here:
+        String Nama = tfNamaRegister.getText();
+            String jenisKelamin = tfJenisKelaminRegister.getText();
+            String kewarganegaraan = tfKewarganegaraanRegister.getText();
+            String noHp = tfNohpRegister.getText();
+            String email = tfEmailRegister.getText();
+            String tanggalLahir = tfTanggalLahirRegister.getText();
+            String password = tfPasswordRegister.getText();
+           
+            
+            if(Nama.equals("") || jenisKelamin.equals("") || kewarganegaraan.equals("") || noHp.equals("") || email.equals("") || tanggalLahir.equals("") || password.equals("")){
+                JOptionPane.showMessageDialog(this, "Isi yang kosong yah!");
+            } else {
+        
+                saveDataAkun(Nama, jenisKelamin, kewarganegaraan, noHp, email, tanggalLahir, password, "user");
+                Login1 JFrameLogin =  new Login1();
+      this.dispose();
+      JFrameLogin.setVisible(true);
+            }
     }//GEN-LAST:event_btLoginRegisterActionPerformed
 
     private void exitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exitMouseClicked
@@ -245,13 +317,13 @@ public class register1 extends javax.swing.JFrame {
         this.setExtendedState(register1.ICONIFIED);
     }//GEN-LAST:event_minimizeMouseClicked
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void tfNamaRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfNamaRegisterActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_tfNamaRegisterActionPerformed
 
     private void invisible2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_invisible2MouseClicked
         // password beralih ke 
-        txtPasswordRegister.setEchoChar((char)0);
+        tfPasswordRegister.setEchoChar((char)0);
         invisible2.setVisible(false);
         invisible2.setEnabled(false);
         show2.setEnabled(true);
@@ -260,7 +332,7 @@ public class register1 extends javax.swing.JFrame {
 
     private void show2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_show2MouseClicked
         // 
-        txtPasswordRegister.setEchoChar((char)8226);
+        tfPasswordRegister.setEchoChar((char)8226);
         invisible2.setVisible(true);
         invisible2.setEnabled(true);
         show2.setEnabled(false);
@@ -275,6 +347,10 @@ public class register1 extends javax.swing.JFrame {
         Login1Frame.setLocationRelativeTo(null);
         this.dispose();
     }//GEN-LAST:event_LoginRegisterMouseClicked
+
+    private void tfEmailRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfEmailRegisterActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfEmailRegisterActionPerformed
 
     /**
      * @param args the command line arguments
@@ -331,14 +407,14 @@ public class register1 extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel minimize;
     private javax.swing.JLabel show2;
+    private javax.swing.JTextField tfEmailRegister;
     private javax.swing.JTextField tfJenisKelaminRegister;
-    private javax.swing.JTextField tfJenisKelaminRegister1;
-    private javax.swing.JTextField tfJenisKelaminRegister2;
-    private javax.swing.JTextField tfJenisKelaminRegister3;
-    private javax.swing.JTextField tfJenisKelaminRegister4;
-    private javax.swing.JPasswordField txtPasswordRegister;
+    private javax.swing.JTextField tfKewarganegaraanRegister;
+    private javax.swing.JTextField tfNamaRegister;
+    private javax.swing.JTextField tfNohpRegister;
+    private javax.swing.JPasswordField tfPasswordRegister;
+    private javax.swing.JTextField tfTanggalLahirRegister;
     // End of variables declaration//GEN-END:variables
 }
