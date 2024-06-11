@@ -126,7 +126,7 @@ public class MenuAdmin extends javax.swing.JFrame {
         );
         PmainMemberLayout.setVerticalGroup(
             PmainMemberLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PmainMemberLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PmainMemberLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(PmainMemberLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(PgarisMember, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -150,7 +150,6 @@ public class MenuAdmin extends javax.swing.JFrame {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        iconPesawat.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         iconPesawat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/Plane.png"))); // NOI18N
 
         JLPesawat.setText("Pesawat");
@@ -193,7 +192,6 @@ public class MenuAdmin extends javax.swing.JFrame {
         PmainDashboard.setBackground(new java.awt.Color(255, 255, 255));
         PmainDashboard.setPreferredSize(new java.awt.Dimension(253, 48));
 
-        iconDash.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         iconDash.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/Laptop Metrics.png"))); // NOI18N
 
         JLDashboard.setText("Dashboard");
@@ -338,7 +336,7 @@ public class MenuAdmin extends javax.swing.JFrame {
             panel_tengahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_tengahLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panelTengahDashboard, javax.swing.GroupLayout.DEFAULT_SIZE, 912, Short.MAX_VALUE)
+                .addComponent(panelTengahDashboard, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE)
                 .addContainerGap())
         );
         panel_tengahLayout.setVerticalGroup(
@@ -357,77 +355,6 @@ public class MenuAdmin extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void JLDashboardMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLDashboardMouseEntered
-        // merubah warna dashboard
-        PmainDashboard.setBackground(new Color(250,250,250));
-        PgarisDashboard.setBackground(new Color(102,153,255));
-    }//GEN-LAST:event_JLDashboardMouseEntered
-
-    private void JLDashboardMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLDashboardMouseExited
-        // merubah kembali ke awal warna
-        PmainDashboard.setBackground(new Color(255,255,255));
-        PgarisDashboard.setBackground(new Color(255,255,255));
-    }//GEN-LAST:event_JLDashboardMouseExited
-
-    private void JLPesawatMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLPesawatMouseEntered
-        // TODO add your handling code here:
-        PmainPesawat.setBackground(new Color(250,250,250));
-        PgarisPesawat.setBackground(new Color(102,153,255));
-    }//GEN-LAST:event_JLPesawatMouseEntered
-
-    private void JLPesawatMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLPesawatMouseExited
-        // TODO add your handling code here:
-        PmainPesawat.setBackground(new Color(255,255,255));
-        PgarisPesawat.setBackground(new Color(255,255,255));
-    }//GEN-LAST:event_JLPesawatMouseExited
-
-    private void JLDashboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLDashboardMouseClicked
-        // menampilkan panel dashboard
-        PmainDashboard.setBackground(new Color(240,240,240));
-        PgarisDashboard.setBackground(new Color(102,153,255));
-        
-        panelTengahDashboard.removeAll();
-        panelTengahDashboard.add(new MenuDashboard2());
-        panelTengahDashboard.repaint();
-        panelTengahDashboard.revalidate();
-        
-    }//GEN-LAST:event_JLDashboardMouseClicked
-
-    private void JLPesawatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLPesawatMouseClicked
-        // menampilkan panel pesawat
-        PmainPesawat.setBackground(new Color(240,240,240));
-        PgarisPesawat.setBackground(new Color(102,153,255));
-        
-        panelTengahDashboard.removeAll();
-        panelTengahDashboard.add(new MenuPesawat1());
-        panelTengahDashboard.repaint();
-        panelTengahDashboard.revalidate();
-    }//GEN-LAST:event_JLPesawatMouseClicked
-
-    private void JLMemberMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLMemberMouseClicked
-        // TODO add your handling code here:
-        PmainMember.setBackground(new Color(240,240,240));
-        PgarisMember.setBackground(new Color(102,153,255));
-        
-        panelTengahDashboard.removeAll();
-        panelTengahDashboard.add(new MenuMember());
-        panelTengahDashboard.repaint();
-        panelTengahDashboard.revalidate();
-    }//GEN-LAST:event_JLMemberMouseClicked
-
-    private void JLMemberMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLMemberMouseEntered
-        // TODO add your handling code here:
-        PmainMember.setBackground(new Color(250,250,250));
-        PgarisMember.setBackground(new Color(102,153,255));
-        
-    }//GEN-LAST:event_JLMemberMouseEntered
-
-    private void JLMemberMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLMemberMouseExited
-        // TODO add your handling code here:
-        PmainMember.setBackground(new Color(255,255,255));
-        PgarisMember.setBackground(new Color(255,255,255));
-    }//GEN-LAST:event_JLMemberMouseExited
-
     private void minimizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minimizeMouseClicked
         // TODO add your handling code here:
         this.setExtendedState(MenuCustomer.ICONIFIED);
@@ -437,6 +364,76 @@ public class MenuAdmin extends javax.swing.JFrame {
         // TODO add your handling code here:
         System.exit(0);
     }//GEN-LAST:event_exitMouseClicked
+
+    private void JLDashboardMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLDashboardMouseExited
+        // merubah kembali ke awal warna
+        PmainDashboard.setBackground(new Color(255,255,255));
+        PgarisDashboard.setBackground(new Color(255,255,255));
+    }//GEN-LAST:event_JLDashboardMouseExited
+
+    private void JLDashboardMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLDashboardMouseEntered
+        // merubah warna dashboard
+        PmainDashboard.setBackground(new Color(250,250,250));
+        PgarisDashboard.setBackground(new Color(102,153,255));
+    }//GEN-LAST:event_JLDashboardMouseEntered
+
+    private void JLDashboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLDashboardMouseClicked
+        // menampilkan panel dashboard
+        PmainDashboard.setBackground(new Color(240,240,240));
+        PgarisDashboard.setBackground(new Color(102,153,255));
+
+        panelTengahDashboard.removeAll();
+        panelTengahDashboard.add(new MenuDashboard2());
+        panelTengahDashboard.repaint();
+        panelTengahDashboard.revalidate();
+
+    }//GEN-LAST:event_JLDashboardMouseClicked
+
+    private void JLPesawatMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLPesawatMouseExited
+        // TODO add your handling code here:
+        PmainPesawat.setBackground(new Color(255,255,255));
+        PgarisPesawat.setBackground(new Color(255,255,255));
+    }//GEN-LAST:event_JLPesawatMouseExited
+
+    private void JLPesawatMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLPesawatMouseEntered
+        // TODO add your handling code here:
+        PmainPesawat.setBackground(new Color(250,250,250));
+        PgarisPesawat.setBackground(new Color(102,153,255));
+    }//GEN-LAST:event_JLPesawatMouseEntered
+
+    private void JLPesawatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLPesawatMouseClicked
+        // menampilkan panel pesawat
+        PmainPesawat.setBackground(new Color(240,240,240));
+        PgarisPesawat.setBackground(new Color(102,153,255));
+
+        panelTengahDashboard.removeAll();
+        panelTengahDashboard.add(new MenuPesawat1());
+        panelTengahDashboard.repaint();
+        panelTengahDashboard.revalidate();
+    }//GEN-LAST:event_JLPesawatMouseClicked
+
+    private void JLMemberMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLMemberMouseExited
+        // TODO add your handling code here:
+        PmainMember.setBackground(new Color(255,255,255));
+        PgarisMember.setBackground(new Color(255,255,255));
+    }//GEN-LAST:event_JLMemberMouseExited
+
+    private void JLMemberMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLMemberMouseEntered
+        // TODO add your handling code here:
+        PmainMember.setBackground(new Color(250,250,250));
+        PgarisMember.setBackground(new Color(102,153,255));
+    }//GEN-LAST:event_JLMemberMouseEntered
+
+    private void JLMemberMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLMemberMouseClicked
+        // TODO add your handling code here:
+        PmainMember.setBackground(new Color(240,240,240));
+        PgarisMember.setBackground(new Color(102,153,255));
+
+        panelTengahDashboard.removeAll();
+        panelTengahDashboard.add(new MenuMember());
+        panelTengahDashboard.repaint();
+        panelTengahDashboard.revalidate();
+    }//GEN-LAST:event_JLMemberMouseClicked
 
     /**
      * @param args the command line arguments

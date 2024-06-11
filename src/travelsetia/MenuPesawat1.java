@@ -5,6 +5,19 @@
 package travelsetia;
 
 import java.awt.Color;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.SQLException;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableRowSorter;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -15,8 +28,174 @@ public class MenuPesawat1 extends javax.swing.JPanel {
     /**
      * Creates new form MenuPesawat1
      */
+    private Connection conn;
+
     public MenuPesawat1() {
         initComponents();
+        loadDataToTable();
+
+        tabelPesawatAdmin.getSelectionModel().addListSelectionListener(event -> {
+            if (!event.getValueIsAdjusting() && tabelPesawatAdmin.getSelectedRow() != -1) {
+                updateTextFields();
+            }
+        });
+    }
+
+    private void loadDataToTable() {
+
+        conn = Koneksi.bukaKoneksi();
+        System.out.println(conn);
+        String sql = "SELECT p.idPesawat, p.namaPesawat, b.namaBandara AS kotaKeberangkatan, p.destinasi, jp.tanggalKeberangkatan, p.kursiTersedia, p.harga, p.statusKursi\n"
+                + "FROM pesawat p \n"
+                + "LEFT JOIN bandara b ON p.destinasi = b.kota\n"
+                + "LEFT JOIN jadwalpenerbangan jp ON p.idPesawat = jp.idPesawat\n"
+                + "ORDER BY jp.tanggalKeberangkatan ASC;";
+        try {
+            PreparedStatement pst = conn.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+
+            DefaultTableModel model = new DefaultTableModel();
+            model.setColumnIdentifiers(new Object[]{"ID Pesawat", "Nama Pesawat", "Kota Keberangkatan", "Destinasi", "Tanggal Keberangkatan", "Kursi Tersedia", "Harga", "Status Kursi"});
+
+            while (rs.next()) {
+                
+                String statusKursi;
+                if (rs.getInt("kursiTersedia") > 0){
+                    statusKursi = "ada";
+                } else {
+                    statusKursi = " habis ";
+                }
+                model.addRow(new Object[]{
+                    rs.getInt("idPesawat"),
+                    rs.getString("namaPesawat"),
+                    rs.getString("kotaKeberangkatan"),
+                    rs.getString("destinasi"),
+                    rs.getString("tanggalKeberangkatan"),
+                    rs.getInt("kursiTersedia"),
+                    rs.getInt("harga"),
+                    statusKursi
+                    
+                });
+            }
+
+            tabelPesawatAdmin.setModel(model);
+            tabelPesawatAdmin.setDefaultEditor(Object.class, null);
+
+        } catch (Exception ex) {
+            System.out.println("Error : " + ex.getMessage());
+        }
+    }
+
+    private void insertRow() {
+        String namaPesawat = tfMaskapai.getText();
+        String kotaKeberangkatan = tfKotaKeberangkatan.getText();
+        String destinasi = tfDestinasi.getText();
+        String tanggalBerangkat = tfTanggalBerangkat.getText();
+        int kursiTersedia = Integer.parseInt(tfkursiTersedia.getText());
+        int harga = Integer.parseInt(txtTotalBayar.getText());
+
+        // Query INSERT yang benar
+        String sql = "INSERT INTO pesawat (namaPesawat, destinasi, kursiTersedia, harga) VALUES (?, ?, ?, ?)";
+        try {
+            // Menggunakan RETURN_GENERATED_KEYS untuk mendapatkan kunci yang dihasilkan
+            PreparedStatement pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            pst.setString(1, namaPesawat);
+            pst.setString(2, destinasi);
+            pst.setInt(3, kursiTersedia);
+            pst.setInt(4, harga);
+            pst.executeUpdate();
+            System.out.println("Row inserted successfully.");
+
+            // Dapatkan ID yang dihasilkan
+            ResultSet rs = pst.getGeneratedKeys();
+            if (rs.next()) {
+                int idPesawat = rs.getInt(1);
+
+                // Tambahkan baris baru ke model tabel
+                DefaultTableModel model = (DefaultTableModel) tabelPesawatAdmin.getModel();
+                model.addRow(new Object[]{idPesawat, namaPesawat, kotaKeberangkatan, destinasi, tanggalBerangkat, kursiTersedia, harga});
+            }
+        } catch (Exception ex) {
+            System.out.println("Error : " + ex.getMessage());
+        }
+    }
+
+    private void updateTextFields() {
+        int row = tabelPesawatAdmin.getSelectedRow();
+        DefaultTableModel model = (DefaultTableModel) tabelPesawatAdmin.getModel();
+        String namaPesawat = model.getValueAt(row, 1) != null ? model.getValueAt(row, 1).toString() : "";
+        String kotaKeberangkatan = model.getValueAt(row, 2) != null ? model.getValueAt(row, 2).toString() : "";
+        String destinasi = model.getValueAt(row, 3) != null ? model.getValueAt(row, 3).toString() : "";
+        String waktuKeberangkatan = model.getValueAt(row, 4) != null ? model.getValueAt(row, 4).toString() : "";
+        String kursiTersedia = model.getValueAt(row, 5) != null ? model.getValueAt(row, 5).toString() : "";
+        String harga = model.getValueAt(row, 6) != null ? model.getValueAt(row, 6).toString() : "";
+
+        tfMaskapai.setText(namaPesawat);
+        tfKotaKeberangkatan.setText(kotaKeberangkatan);
+        tfDestinasi.setText(destinasi);
+        tfTanggalBerangkat.setText(waktuKeberangkatan);
+        tfkursiTersedia.setText(kursiTersedia);
+        txtTotalBayar.setText(harga);
+    }
+
+    private void updateSelectedRow() {
+        int row = tabelPesawatAdmin.getSelectedRow();
+        if (row != -1) {
+            DefaultTableModel model = (DefaultTableModel) tabelPesawatAdmin.getModel();
+            int idPesawat = (int) model.getValueAt(row, 0);
+
+            String namaPesawat = tfMaskapai.getText();
+            String kotaKeberangkatan = tfKotaKeberangkatan.getText();
+            String destinasi = tfDestinasi.getText();
+            String tanggalBerangkat = tfTanggalBerangkat.getText();
+            int kursiTersedia = Integer.parseInt(tfkursiTersedia.getText());
+            int harga = Integer.parseInt(txtTotalBayar.getText());
+
+            // Update di database
+            String sql = "UPDATE pesawat SET namaPesawat = ?, destinasi = ?, kursiTersedia = ?, harga = ? WHERE idPesawat = ?";
+            try {
+                PreparedStatement pst = conn.prepareStatement(sql);
+                pst.setString(1, namaPesawat);
+                pst.setString(2, destinasi);
+                pst.setInt(3, kursiTersedia);
+                pst.setInt(4, harga);
+                pst.setInt(5, idPesawat);
+                pst.executeUpdate();
+                System.out.println("Row updated successfully.");
+            } catch (Exception ex) {
+                System.out.println("Error : " + ex.getMessage());
+            }
+
+            // Update di tabel
+            model.setValueAt(namaPesawat, row, 1);
+            model.setValueAt(kotaKeberangkatan, row, 2);
+            model.setValueAt(destinasi, row, 3);
+            model.setValueAt(tanggalBerangkat, row, 4);
+            model.setValueAt(kursiTersedia, row, 5);
+            model.setValueAt(harga, row, 6);
+        }
+    }
+
+    private void deleteSelectedRow() {
+        int row = tabelPesawatAdmin.getSelectedRow();
+        if (row != -1) {
+            DefaultTableModel model = (DefaultTableModel) tabelPesawatAdmin.getModel();
+            int idPesawat = (int) model.getValueAt(row, 0);
+
+            // Hapus dari database
+            String sql = "DELETE FROM pesawat WHERE idPesawat = ?";
+            try {
+                PreparedStatement pst = conn.prepareStatement(sql);
+                pst.setInt(1, idPesawat);
+                pst.executeUpdate();
+                System.out.println("Row deleted successfully.");
+            } catch (Exception ex) {
+                System.out.println("Error : " + ex.getMessage());
+            }
+
+            // Hapus dari tabel
+            model.removeRow(row);
+        }
     }
 
     /**
@@ -29,35 +208,40 @@ public class MenuPesawat1 extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tabelPesawatAdmin = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        buttonTambah = new javax.swing.JButton();
+        buttonUbah = new javax.swing.JButton();
+        buttonHapus = new javax.swing.JButton();
         iconPesawat = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        tfNamaPesawatUp = new javax.swing.JTextField();
-        tfKotaUp = new javax.swing.JTextField();
-        tfDestinasiUp = new javax.swing.JTextField();
-        tfTanggalUp = new javax.swing.JTextField();
-        tfKursUp = new javax.swing.JTextField();
-        tfHargaUp = new javax.swing.JTextField();
+        txtTotalBayar = new javax.swing.JTextField();
+        tfMaskapai = new javax.swing.JTextField();
+        tfKotaKeberangkatan = new javax.swing.JTextField();
+        tfDestinasi = new javax.swing.JTextField();
+        tfTanggalBerangkat = new javax.swing.JTextField();
+        tfkursiTersedia = new javax.swing.JTextField();
 
         setBackground(new java.awt.Color(53, 114, 239));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tabelPesawatAdmin.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        tabelPesawatAdmin.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelPesawatAdminMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tabelPesawatAdmin);
 
         add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 250, 760, 310));
 
@@ -66,29 +250,44 @@ public class MenuPesawat1 extends javax.swing.JPanel {
         jLabel2.setText("Data Pesawat");
         add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 30, 120, 30));
 
-        jButton4.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(102, 153, 255));
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/Plus.png"))); // NOI18N
-        jButton4.setText("Tambah");
-        jButton4.setBorder(null);
-        jButton4.setPreferredSize(new java.awt.Dimension(78, 25));
-        add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 70, 140, 50));
+        buttonTambah.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
+        buttonTambah.setForeground(new java.awt.Color(102, 153, 255));
+        buttonTambah.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/Plus.png"))); // NOI18N
+        buttonTambah.setText("Tambah");
+        buttonTambah.setBorder(null);
+        buttonTambah.setPreferredSize(new java.awt.Dimension(78, 25));
+        buttonTambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonTambahActionPerformed(evt);
+            }
+        });
+        add(buttonTambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 70, 140, 50));
 
-        jButton5.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
-        jButton5.setForeground(new java.awt.Color(102, 153, 255));
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/Change.png"))); // NOI18N
-        jButton5.setText("Ubah");
-        jButton5.setBorder(null);
-        jButton5.setPreferredSize(new java.awt.Dimension(78, 25));
-        add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 130, 140, 50));
+        buttonUbah.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
+        buttonUbah.setForeground(new java.awt.Color(102, 153, 255));
+        buttonUbah.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/Change.png"))); // NOI18N
+        buttonUbah.setText("Ubah");
+        buttonUbah.setBorder(null);
+        buttonUbah.setPreferredSize(new java.awt.Dimension(78, 25));
+        buttonUbah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonUbahActionPerformed(evt);
+            }
+        });
+        add(buttonUbah, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 130, 140, 50));
 
-        jButton6.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
-        jButton6.setForeground(new java.awt.Color(102, 153, 255));
-        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/Minus.png"))); // NOI18N
-        jButton6.setText("Hapus");
-        jButton6.setBorder(null);
-        jButton6.setPreferredSize(new java.awt.Dimension(78, 25));
-        add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 190, 140, 50));
+        buttonHapus.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
+        buttonHapus.setForeground(new java.awt.Color(102, 153, 255));
+        buttonHapus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/Minus.png"))); // NOI18N
+        buttonHapus.setText("Hapus");
+        buttonHapus.setBorder(null);
+        buttonHapus.setPreferredSize(new java.awt.Dimension(78, 25));
+        buttonHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonHapusActionPerformed(evt);
+            }
+        });
+        add(buttonHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 190, 140, 50));
 
         iconPesawat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/Plane.png"))); // NOI18N
         add(iconPesawat, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 30, -1, -1));
@@ -98,220 +297,250 @@ public class MenuPesawat1 extends javax.swing.JPanel {
         jLabel3.setText("Master Data > Pesawat");
         add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 0, 260, 30));
 
-        tfNamaPesawatUp.setForeground(new java.awt.Color(153, 153, 153));
-        tfNamaPesawatUp.setText("Nama Pesawat");
-        tfNamaPesawatUp.addFocusListener(new java.awt.event.FocusAdapter() {
+        txtTotalBayar.setForeground(new java.awt.Color(153, 153, 153));
+        txtTotalBayar.setText("Harga");
+        txtTotalBayar.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                tfNamaPesawatUpFocusGained(evt);
+                txtTotalBayarFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                tfNamaPesawatUpFocusLost(evt);
+                txtTotalBayarFocusLost(evt);
             }
         });
-        tfNamaPesawatUp.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                tfNamaPesawatUpKeyTyped(evt);
-            }
-        });
-        add(tfNamaPesawatUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 70, 290, 50));
-
-        tfKotaUp.setForeground(new java.awt.Color(153, 153, 153));
-        tfKotaUp.setText("Kota Keberangkatan");
-        tfKotaUp.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                tfKotaUpFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tfKotaUpFocusLost(evt);
-            }
-        });
-        add(tfKotaUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, 290, 50));
-
-        tfDestinasiUp.setForeground(new java.awt.Color(153, 153, 153));
-        tfDestinasiUp.setText("Destinasi");
-        tfDestinasiUp.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                tfDestinasiUpFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tfDestinasiUpFocusLost(evt);
-            }
-        });
-        tfDestinasiUp.addActionListener(new java.awt.event.ActionListener() {
+        txtTotalBayar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfDestinasiUpActionPerformed(evt);
+                txtTotalBayarActionPerformed(evt);
             }
         });
-        add(tfDestinasiUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 190, 290, 50));
+        add(txtTotalBayar, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 190, 290, 50));
 
-        tfTanggalUp.setForeground(new java.awt.Color(153, 153, 153));
-        tfTanggalUp.setText("Tanggal Keberangkatan");
-        tfTanggalUp.addFocusListener(new java.awt.event.FocusAdapter() {
+        tfMaskapai.setForeground(new java.awt.Color(153, 153, 153));
+        tfMaskapai.setText("Nama Pesawat");
+        tfMaskapai.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                tfTanggalUpFocusGained(evt);
+                tfMaskapaiFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                tfTanggalUpFocusLost(evt);
+                tfMaskapaiFocusLost(evt);
             }
         });
-        add(tfTanggalUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 70, 290, 50));
-
-        tfKursUp.setForeground(new java.awt.Color(153, 153, 153));
-        tfKursUp.setText("Kursi Tersedia");
-        tfKursUp.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                tfKursUpFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tfKursUpFocusLost(evt);
-            }
-        });
-        tfKursUp.addActionListener(new java.awt.event.ActionListener() {
+        tfMaskapai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfKursUpActionPerformed(evt);
+                tfMaskapaiActionPerformed(evt);
             }
         });
-        add(tfKursUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 130, 290, 50));
+        add(tfMaskapai, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 70, 290, 50));
 
-        tfHargaUp.setForeground(new java.awt.Color(153, 153, 153));
-        tfHargaUp.setText("Harga");
-        tfHargaUp.addFocusListener(new java.awt.event.FocusAdapter() {
+        tfKotaKeberangkatan.setForeground(new java.awt.Color(153, 153, 153));
+        tfKotaKeberangkatan.setText("Kota Keberangkatan");
+        tfKotaKeberangkatan.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                tfHargaUpFocusGained(evt);
+                tfKotaKeberangkatanFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                tfHargaUpFocusLost(evt);
+                tfKotaKeberangkatanFocusLost(evt);
             }
         });
-        add(tfHargaUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 190, 290, 50));
+        tfKotaKeberangkatan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfKotaKeberangkatanActionPerformed(evt);
+            }
+        });
+        add(tfKotaKeberangkatan, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, 290, 50));
+
+        tfDestinasi.setForeground(new java.awt.Color(153, 153, 153));
+        tfDestinasi.setText("Destinasi");
+        tfDestinasi.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tfDestinasiFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfDestinasiFocusLost(evt);
+            }
+        });
+        tfDestinasi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfDestinasiActionPerformed(evt);
+            }
+        });
+        add(tfDestinasi, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 190, 290, 50));
+
+        tfTanggalBerangkat.setForeground(new java.awt.Color(153, 153, 153));
+        tfTanggalBerangkat.setText("Tanggal Keberangkatan");
+        tfTanggalBerangkat.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tfTanggalBerangkatFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfTanggalBerangkatFocusLost(evt);
+            }
+        });
+        add(tfTanggalBerangkat, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 70, 290, 50));
+
+        tfkursiTersedia.setForeground(new java.awt.Color(153, 153, 153));
+        tfkursiTersedia.setText("Kursi Tersedia");
+        tfkursiTersedia.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tfkursiTersediaFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfkursiTersediaFocusLost(evt);
+            }
+        });
+        tfkursiTersedia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfkursiTersediaActionPerformed(evt);
+            }
+        });
+        add(tfkursiTersedia, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 130, 290, 50));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tfKursUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfKursUpActionPerformed
+    private void tfkursiTersediaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfkursiTersediaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_tfKursUpActionPerformed
+    }//GEN-LAST:event_tfkursiTersediaActionPerformed
 
-    private void tfNamaPesawatUpKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfNamaPesawatUpKeyTyped
+    private void tfMaskapaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfMaskapaiActionPerformed
         // TODO add your handling code here:
-        
-    }//GEN-LAST:event_tfNamaPesawatUpKeyTyped
+    }//GEN-LAST:event_tfMaskapaiActionPerformed
 
-    private void tfDestinasiUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfDestinasiUpActionPerformed
+    private void txtTotalBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalBayarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_tfDestinasiUpActionPerformed
+    }//GEN-LAST:event_txtTotalBayarActionPerformed
 
-    private void tfNamaPesawatUpFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfNamaPesawatUpFocusGained
+    private void tfDestinasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfDestinasiActionPerformed
         // TODO add your handling code here:
-        if(tfNamaPesawatUp.getText().equals("Nama Pesawat")){
-            tfNamaPesawatUp.setText("");
-            tfNamaPesawatUp.setForeground(new Color(153,153,153));
+    }//GEN-LAST:event_tfDestinasiActionPerformed
+
+    private void tabelPesawatAdminMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelPesawatAdminMouseClicked
+        updateTextFields();
+    }//GEN-LAST:event_tabelPesawatAdminMouseClicked
+
+    private void buttonHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonHapusActionPerformed
+        deleteSelectedRow();
+    }//GEN-LAST:event_buttonHapusActionPerformed
+
+    private void buttonUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUbahActionPerformed
+        updateSelectedRow();
+    }//GEN-LAST:event_buttonUbahActionPerformed
+
+    private void buttonTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTambahActionPerformed
+        insertRow();
+    }//GEN-LAST:event_buttonTambahActionPerformed
+
+    private void tfMaskapaiFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfMaskapaiFocusGained
+        if (tfMaskapai.getText().equals("Nama Pesawat")) {
+            tfMaskapai.setText("");
+            tfMaskapai.setForeground(new Color(153, 153, 153));
         }
-    }//GEN-LAST:event_tfNamaPesawatUpFocusGained
 
-    private void tfNamaPesawatUpFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfNamaPesawatUpFocusLost
-        // TODO add your handling code here:
-        if(tfNamaPesawatUp.getText().equals("")){
-            tfNamaPesawatUp.setText("Nama Pesawat");
-            tfNamaPesawatUp.setForeground(new Color(153,153,153));
-        }
-    }//GEN-LAST:event_tfNamaPesawatUpFocusLost
+    }//GEN-LAST:event_tfMaskapaiFocusGained
 
-    private void tfKotaUpFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfKotaUpFocusGained
-        // TODO add your handling code here:
-        if(tfKotaUp.getText().equals("Kota Keberangkatan")){
-            tfKotaUp.setText("");
-            tfKotaUp.setForeground(new Color(153,153,153));
+    private void tfMaskapaiFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfMaskapaiFocusLost
+        if (tfMaskapai.getText().equals("")) {
+            tfMaskapai.setText("Nama Pesawat");
+            tfMaskapai.setForeground(new Color(153, 153, 153));
         }
-    }//GEN-LAST:event_tfKotaUpFocusGained
 
-    private void tfKotaUpFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfKotaUpFocusLost
-        // TODO add your handling code here:
-        if(tfKotaUp.getText().equals("")){
-            tfKotaUp.setText("Kota Keberangkata");
-            tfKotaUp.setForeground(new Color(153,153,153));
-        }
-    }//GEN-LAST:event_tfKotaUpFocusLost
+    }//GEN-LAST:event_tfMaskapaiFocusLost
 
-    private void tfDestinasiUpFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfDestinasiUpFocusGained
+    private void tfKotaKeberangkatanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfKotaKeberangkatanActionPerformed
         // TODO add your handling code here:
-        if(tfDestinasiUp.getText().equals("Destinasi")){
-            tfDestinasiUp.setText("");
-            tfDestinasiUp.setForeground(new Color(153,153,153));
-        }
-    }//GEN-LAST:event_tfDestinasiUpFocusGained
+    }//GEN-LAST:event_tfKotaKeberangkatanActionPerformed
 
-    private void tfDestinasiUpFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfDestinasiUpFocusLost
-        // TODO add your handling code here:
-        if(tfDestinasiUp.getText().equals("")){
-            tfDestinasiUp.setText("Destinasi");
-            tfDestinasiUp.setForeground(new Color(153,153,153));
+    private void tfKotaKeberangkatanFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfKotaKeberangkatanFocusGained
+        if (tfKotaKeberangkatan.getText().equals("Kota Keberangkatan")) {
+            tfKotaKeberangkatan.setText("");
+            tfKotaKeberangkatan.setForeground(new Color(153, 153, 153));
         }
-    }//GEN-LAST:event_tfDestinasiUpFocusLost
 
-    private void tfTanggalUpFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfTanggalUpFocusGained
-        // TODO add your handling code here:
-        if(tfTanggalUp.getText().equals("Tanggal Keberangkatan")){
-            tfTanggalUp.setText("");
-            tfTanggalUp.setForeground(new Color(153,153,153));
-        }
-    }//GEN-LAST:event_tfTanggalUpFocusGained
+    }//GEN-LAST:event_tfKotaKeberangkatanFocusGained
 
-    private void tfTanggalUpFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfTanggalUpFocusLost
-        // TODO add your handling code here:
-        if(tfTanggalUp.getText().equals("")){
-            tfTanggalUp.setText("Tanggal Keberangkatan");
-            tfTanggalUp.setForeground(new Color(153,153,153));
+    private void tfKotaKeberangkatanFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfKotaKeberangkatanFocusLost
+        if (tfKotaKeberangkatan.getText().equals("")) {
+            tfKotaKeberangkatan.setText("Kota Keberangkatan");
+            tfKotaKeberangkatan.setForeground(new Color(153, 153, 153));
         }
-    }//GEN-LAST:event_tfTanggalUpFocusLost
+    }//GEN-LAST:event_tfKotaKeberangkatanFocusLost
 
-    private void tfKursUpFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfKursUpFocusGained
-        // TODO add your handling code here:
-        if(tfKursUp.getText().equals("Kursi Tersedia")){
-            tfKursUp.setText("");
-            tfKursUp.setForeground(new Color(153,153,153));
+    private void tfDestinasiFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfDestinasiFocusGained
+        if (tfDestinasi.getText().equals("Destinasi")) {
+            tfDestinasi.setText("");
+            tfDestinasi.setForeground(new Color(153, 153, 153));
         }
-    }//GEN-LAST:event_tfKursUpFocusGained
 
-    private void tfKursUpFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfKursUpFocusLost
-        // TODO add your handling code here:
-        if(tfKursUp.getText().equals("")){
-            tfKursUp.setText("Kursi Tersedia");
-            tfKursUp.setForeground(new Color(153,153,153));
-        }
-    }//GEN-LAST:event_tfKursUpFocusLost
+    }//GEN-LAST:event_tfDestinasiFocusGained
 
-    private void tfHargaUpFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfHargaUpFocusGained
-        // TODO add your handling code here:
-        if(tfHargaUp.getText().equals("Harga")){
-            tfHargaUp.setText("");
-            tfHargaUp.setForeground(new Color(153,153,153));
+    private void tfDestinasiFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfDestinasiFocusLost
+        if (tfDestinasi.getText().equals("")) {
+            tfDestinasi.setText("Destinasi");
+            tfDestinasi.setForeground(new Color(153, 153, 153));
         }
-        
-    }//GEN-LAST:event_tfHargaUpFocusGained
 
-    private void tfHargaUpFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfHargaUpFocusLost
-        // TODO add your handling code here:
-        if(tfHargaUp.getText().equals("")){
-            tfHargaUp.setText("Harga");
-            tfHargaUp.setForeground(new Color(153,153,153));
+    }//GEN-LAST:event_tfDestinasiFocusLost
+
+    private void tfTanggalBerangkatFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfTanggalBerangkatFocusGained
+        if (tfTanggalBerangkat.getText().equals("Tanggal Keberangkatan")) {
+            tfTanggalBerangkat.setText("");
+            tfTanggalBerangkat.setForeground(new Color(153, 153, 153));
         }
-        
-    }//GEN-LAST:event_tfHargaUpFocusLost
+
+    }//GEN-LAST:event_tfTanggalBerangkatFocusGained
+
+    private void tfTanggalBerangkatFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfTanggalBerangkatFocusLost
+        if (tfTanggalBerangkat.getText().equals("")) {
+            tfTanggalBerangkat.setText("Tanggal Keberangkatan");
+            tfTanggalBerangkat.setForeground(new Color(153, 153, 153));
+        }
+
+    }//GEN-LAST:event_tfTanggalBerangkatFocusLost
+
+    private void tfkursiTersediaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfkursiTersediaFocusGained
+        if (tfkursiTersedia.getText().equals("Kursi Tersedia")) {
+            tfkursiTersedia.setText("");
+            tfkursiTersedia.setForeground(new Color(153, 153, 153));
+        }
+
+    }//GEN-LAST:event_tfkursiTersediaFocusGained
+
+    private void tfkursiTersediaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfkursiTersediaFocusLost
+        if (tfkursiTersedia.getText().equals("")) {
+            tfkursiTersedia.setText("Kursi Tersedia");
+            tfkursiTersedia.setForeground(new Color(153, 153, 153));
+        }
+
+    }//GEN-LAST:event_tfkursiTersediaFocusLost
+
+    private void txtTotalBayarFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTotalBayarFocusGained
+        if (txtTotalBayar.getText().equals("Harga")) {
+            txtTotalBayar.setText("");
+            txtTotalBayar.setForeground(new Color(153, 153, 153));
+        }
+
+    }//GEN-LAST:event_txtTotalBayarFocusGained
+
+    private void txtTotalBayarFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTotalBayarFocusLost
+        if (txtTotalBayar.getText().equals("")) {
+            txtTotalBayar.setText("Harga");
+            txtTotalBayar.setForeground(new Color(153, 153, 153));
+        }
+
+    }//GEN-LAST:event_txtTotalBayarFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonHapus;
+    private javax.swing.JButton buttonTambah;
+    private javax.swing.JButton buttonUbah;
     private javax.swing.JLabel iconPesawat;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTextField tfDestinasiUp;
-    private javax.swing.JTextField tfHargaUp;
-    private javax.swing.JTextField tfKotaUp;
-    private javax.swing.JTextField tfKursUp;
-    private javax.swing.JTextField tfNamaPesawatUp;
-    private javax.swing.JTextField tfTanggalUp;
+    private javax.swing.JTable tabelPesawatAdmin;
+    private javax.swing.JTextField tfDestinasi;
+    private javax.swing.JTextField tfKotaKeberangkatan;
+    private javax.swing.JTextField tfMaskapai;
+    private javax.swing.JTextField tfTanggalBerangkat;
+    private javax.swing.JTextField tfkursiTersedia;
+    private javax.swing.JTextField txtTotalBayar;
     // End of variables declaration//GEN-END:variables
 }

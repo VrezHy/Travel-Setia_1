@@ -3,19 +3,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package travelsetia;
-import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
+
 import javax.swing.JOptionPane;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
-import java.util.ArrayList; 
-import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 
 /**
@@ -25,10 +23,8 @@ import javax.swing.table.TableRowSorter;
 public class MenuCustomer extends javax.swing.JFrame {
 
     /**
-     * Creates new form MenuCustomer 
+     * Creates new form MenuCustomer
      */
-  
-    
     private DefaultTableModel model = new DefaultTableModel();
     private Connection conn;
 
@@ -36,10 +32,8 @@ public class MenuCustomer extends javax.swing.JFrame {
         initComponents();
         txtCariPenerbangan.setBackground(new java.awt.Color(0, 0, 0, 1));
         txtTotalBayar.setBackground(new java.awt.Color(0, 0, 0, 1));
-        
-        
         conn = Koneksi.bukaKoneksi();
-        String sql = "SELECT p.idPesawat, p.namaPesawat, b.idBandara, b.namaBandara AS kotaKeberangkatan, p.destinasi, p.kursiTersedia, p.harga, jp.tanggalKeberangkatan\n"
+        String sql = "SELECT p.idPesawat, p.namaPesawat, b.idBandara, b.namaBandara AS kotaKeberangkatan, p.destinasi, jp.tanggalKeberangkatan, p.kursiTersedia, p.harga , p.statusKursi\n"
                 + "FROM pesawat p \n"
                 + "LEFT JOIN booking bo ON p.idPesawat = bo.idPesawat \n"
                 + "LEFT JOIN bandara b ON p.destinasi = b.kota\n"
@@ -51,9 +45,20 @@ public class MenuCustomer extends javax.swing.JFrame {
 
             // Process the ResultSet and display data in JTable
             DefaultTableModel model = new DefaultTableModel();
-            model.setColumnIdentifiers(new Object[]{"ID Pesawat", "Nama Pesawat", "Kota Keberangkatan", "Destinasi", "Tanggal Keberangkatan", "Kursi Tersedia", "Harga"});
+            model.setColumnIdentifiers(new Object[]{"ID Pesawat", "Nama Pesawat", "Kota Keberangkatan", "Destinasi", "Tanggal Keberangkatan", "Kursi Tersedia", "Harga", "Status Kursi"});
 
             while (rs.next()) {
+
+                String statusKursi;
+                int IdPesawat = rs.getInt("idPesawat");
+                if (rs.getInt("kursiTersedia") > 0) {
+                    statusKursi = "ada";
+                } else {
+                    statusKursi = "habis";
+                }
+                
+                updateStatusKursi(IdPesawat, statusKursi);
+                
                 model.addRow(new Object[]{
                     rs.getInt("idPesawat"),
                     rs.getString("namaPesawat"),
@@ -61,16 +66,122 @@ public class MenuCustomer extends javax.swing.JFrame {
                     rs.getString("destinasi"),
                     rs.getString("tanggalKeberangkatan"),
                     rs.getString("kursiTersedia"),
-                    rs.getInt("harga")
+                    rs.getInt("harga"),
+                    statusKursi
                 });
             }
 
             // Set the model to your JTable
             jTablePesawat.setModel(model);
+            jTablePesawat.setDefaultEditor(Object.class, null);
+            jTablePesawat.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         } catch (Exception ex) {
             System.out.println("Error : " + ex.getMessage());
         }
+    }
+
+    private void updateTextFields() {
+        int row = jTablePesawat.getSelectedRow();
+        DefaultTableModel model = (DefaultTableModel) jTablePesawat.getModel();
+        String namaPesawat = model.getValueAt(row, 1) != null ? model.getValueAt(row, 1).toString() : "";
+        String kotaKeberangkatan = model.getValueAt(row, 2) != null ? model.getValueAt(row, 2).toString() : "";
+        String destinasi = model.getValueAt(row, 3) != null ? model.getValueAt(row, 3).toString() : "";
+        String waktuKeberangkatan = model.getValueAt(row, 4) != null ? model.getValueAt(row, 4).toString() : "";
+        String kursiTersedia = model.getValueAt(row, 5) != null ? model.getValueAt(row, 5).toString() : "";
+        String harga = model.getValueAt(row, 6) != null ? model.getValueAt(row, 6).toString() : "";
+
+        tfMaskapai.setText(namaPesawat);
+        tfKotaKeberangkatan.setText(kotaKeberangkatan);
+        tfDestinasi.setText(destinasi);
+        tfTanggalBerangkat.setText(waktuKeberangkatan);
+        tfkursiTersedia.setText(kursiTersedia);
+        txtTotalBayar.setText(harga);
+
+        updateTotalPrice();
+    }
+
+    private void updateTotalPrice() {
+        int jumlahTiket = Integer.parseInt(CBtiketPenumpang.getSelectedItem().toString());
+        int selectedRow = jTablePesawat.getSelectedRow();
+        if (selectedRow != -1) {
+            int harga = Integer.parseInt(jTablePesawat.getValueAt(selectedRow, 6).toString());
+            int totalHarga = harga * jumlahTiket;
+            txtTotalBayar.setText(String.valueOf(totalHarga));
+        } else {
+            txtTotalBayar.setText("0");
+        }
+    }
+    
+    private void updateStatusKursi(int idPesawat, String statusKursi) {
+    String sql = "UPDATE pesawat SET statusKursi = ? WHERE idPesawat = ?";
+    try {
+        PreparedStatement pst = conn.prepareStatement(sql);
+        pst.setString(1, statusKursi);
+        pst.setInt(2, idPesawat);
+        pst.executeUpdate();
+    } catch (SQLException e) {
+        System.out.println("Error updating status kursi: " + e.getMessage());
+    }
+}
+
+    private void prosesBooking() {
+        int jumlahTiket = Integer.parseInt(CBtiketPenumpang.getSelectedItem().toString());
+        int selectedRow = jTablePesawat.getSelectedRow();
+        if (selectedRow != -1) {
+            int idPesawat = Integer.parseInt(jTablePesawat.getValueAt(selectedRow, 0).toString());
+            int kursiTersedia = Integer.parseInt(jTablePesawat.getValueAt(selectedRow, 5).toString());
+
+            if (kursiTersedia >= jumlahTiket) {
+                int kursiBaru = kursiTersedia - jumlahTiket;
+                updateDatabase(idPesawat, kursiBaru);
+                catatPembelian(idPesawat, jumlahTiket); // Tambahkan ini untuk mencatat pembelian tiket
+            } else {
+                System.out.println("Jumlah tiket melebihi kursi tersedia");
+            }
+        } else {
+            System.out.println("Tidak ada baris yang dipilih");
+        }
+    }
+
+    private void catatPembelian(int idPesawat, int jumlahTiket) {
+        String sqlInsert = "INSERT INTO booking (idPesawat, jumlahTiket) VALUES (?, ?)";
+        try {
+            PreparedStatement pst = conn.prepareStatement(sqlInsert);
+            pst.setInt(1, idPesawat);
+            pst.setInt(2, jumlahTiket);
+            pst.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error inserting pembelian tiket: " + e.getMessage());
+        }
+    }
+
+    private void updateDatabase(int idPesawat, int kursiBaru) {
+        String sqlUpdate = "UPDATE pesawat SET kursiTersedia = ? WHERE idPesawat = ?";
+        try {
+            PreparedStatement pst = conn.prepareStatement(sqlUpdate);
+            pst.setInt(1, kursiBaru);
+            pst.setInt(2, idPesawat);
+            pst.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error updating database: " + e.getMessage());
+        }
+    }
+
+    private void printReceipt() {
+        int jumlahTiket = Integer.parseInt(CBtiketPenumpang.getSelectedItem().toString());
+        String totalHarga = txtTotalBayar.getText();
+        String maskapai = tfMaskapai.getText();
+        String kotaKeberangkatan = tfKotaKeberangkatan.getText();
+        String destinasi = tfDestinasi.getText();
+        String tanggalBerangkat = tfTanggalBerangkat.getText();
+
+        String message = String.format(
+                "Jumlah Tiket: %s\nTotalHarga: %s\nMaskapai: %s\nKota Keberangkatan: %s\nDestinasi: %s\nTanggal Berangkat: %s\n",
+                jumlahTiket, totalHarga, maskapai, kotaKeberangkatan, destinasi, tanggalBerangkat
+        );
+
+        JOptionPane.showMessageDialog(this, message, " Rincian Pembayaran", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -107,8 +218,8 @@ public class MenuCustomer extends javax.swing.JFrame {
         tfff9 = new javax.swing.JPanel();
         txtTotalBayar = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        btnPesan = new javax.swing.JButton();
+        btnCetakPembayaran = new javax.swing.JButton();
         jLabel15 = new javax.swing.JLabel();
         tfMaskapai = new javax.swing.JTextField();
         tfKotaKeberangkatan = new javax.swing.JTextField();
@@ -278,6 +389,11 @@ public class MenuCustomer extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(53, 114, 239));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -287,11 +403,6 @@ public class MenuCustomer extends javax.swing.JFrame {
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tfff9.setBackground(new java.awt.Color(53, 114, 239));
-        tfff9.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentShown(java.awt.event.ComponentEvent evt) {
-                tfff9ComponentShown(evt);
-            }
-        });
         tfff9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         txtTotalBayar.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
@@ -310,26 +421,26 @@ public class MenuCustomer extends javax.swing.JFrame {
         jLabel1.setText("Kursi Tersedia");
         tfff9.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 230, 150, 40));
 
-        jButton4.setText("Pesan Sekarang");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnPesan.setText("Pesan Sekarang");
+        btnPesan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btnPesanActionPerformed(evt);
             }
         });
-        tfff9.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 280, 128, -1));
+        tfff9.add(btnPesan, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 280, 128, -1));
 
-        jButton6.setText("Cetak Pembayaran");
-        tfff9.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 310, -1, -1));
+        btnCetakPembayaran.setText("Cetak Pembayaran");
+        btnCetakPembayaran.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCetakPembayaranActionPerformed(evt);
+            }
+        });
+        tfff9.add(btnCetakPembayaran, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 310, -1, -1));
 
         jLabel15.setForeground(new java.awt.Color(255, 255, 255));
         jLabel15.setText("___________________________________________________________");
         tfff9.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 260, 290, -1));
 
-        tfMaskapai.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentShown(java.awt.event.ComponentEvent evt) {
-                tfMaskapaiComponentShown(evt);
-            }
-        });
         tfMaskapai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tfMaskapaiActionPerformed(evt);
@@ -382,7 +493,7 @@ public class MenuCustomer extends javax.swing.JFrame {
         jLabel19.setText("Tanggal Berangkat");
         tfff9.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(32, 180, 160, 40));
 
-        CBtiketPenumpang.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        CBtiketPenumpang.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4" }));
         CBtiketPenumpang.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CBtiketPenumpangActionPerformed(evt);
@@ -403,20 +514,18 @@ public class MenuCustomer extends javax.swing.JFrame {
 
         jTablePesawat.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-
+                "Maskapai", "Lokasi Keberangkatan", "Destinasi", "Tanggal Keberangkatan", "Status Kursi"
             }
         ));
         jTablePesawat.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTablePesawatMouseClicked(evt);
-            }
-        });
-        jTablePesawat.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentShown(java.awt.event.ComponentEvent evt) {
-                jTablePesawatComponentShown(evt);
             }
         });
         jScrollPane3.setViewportView(jTablePesawat);
@@ -452,11 +561,6 @@ public class MenuCustomer extends javax.swing.JFrame {
 
         BackroundCustomer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/pexels-jerry-wang-2135752-3768652.jpg"))); // NOI18N
         BackroundCustomer.setText("jLabel1");
-        BackroundCustomer.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentShown(java.awt.event.ComponentEvent evt) {
-                BackroundCustomerComponentShown(evt);
-            }
-        });
         jPanel5.add(BackroundCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -7, 1320, 680));
 
         jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 101, 1320, 670));
@@ -529,7 +633,7 @@ public class MenuCustomer extends javax.swing.JFrame {
     }//GEN-LAST:event_exitMouseClicked
 
     private void minimizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minimizeMouseClicked
-        // minimize applikasi
+        // TODO add your handling code here:
         this.setExtendedState(MenuCustomer.ICONIFIED);
     }//GEN-LAST:event_minimizeMouseClicked
 
@@ -545,9 +649,9 @@ public class MenuCustomer extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCariPenerbanganActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    private void btnPesanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesanActionPerformed
+        JOptionPane.showMessageDialog(this, "Berhasil!");
+    }//GEN-LAST:event_btnPesanActionPerformed
 
     private void txtTotalBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalBayarActionPerformed
         // TODO add your handling code here:
@@ -566,45 +670,25 @@ public class MenuCustomer extends javax.swing.JFrame {
     }//GEN-LAST:event_tfkursiTersediaActionPerformed
 
     private void jTablePesawatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablePesawatMouseClicked
-        int row = jTablePesawat.getSelectedRow();
-        DefaultTableModel model = (DefaultTableModel) jTablePesawat.getModel();
-        String namaPesawat = model.getValueAt(row, 1) != null ? model.getValueAt(row, 1).toString() : "";
-        String kotaKeberangkatan = model.getValueAt(row, 2) != null ? model.getValueAt(row, 2).toString() : "";
-        String destinasi = model.getValueAt(row, 3) != null ? model.getValueAt(row, 3).toString() : "";
-        String waktuKeberangkatan = model.getValueAt(row, 4) != null ? model.getValueAt(row, 4).toString() : "";
-        String kursiTersedia = model.getValueAt(row, 5) != null ? model.getValueAt(row, 5).toString() : "";
-        String harga = model.getValueAt(row, 6) != null ? model.getValueAt(row, 6).toString() : "";
-
-        tfMaskapai.setText(namaPesawat);
-        tfKotaKeberangkatan.setText(kotaKeberangkatan);
-        tfDestinasi.setText(destinasi);
-        tfTanggalBerangkat.setText(waktuKeberangkatan);
-        tfkursiTersedia.setText(kursiTersedia);
-        txtTotalBayar.setText(harga);
-
-        
+        updateTextFields();
     }//GEN-LAST:event_jTablePesawatMouseClicked
 
     private void CBtiketPenumpangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CBtiketPenumpangActionPerformed
-        // TODO add your handling code here:
+        updateTotalPrice();
     }//GEN-LAST:event_CBtiketPenumpangActionPerformed
 
-    private void tfMaskapaiComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tfMaskapaiComponentShown
-        // TODO add your handling code here:
+    private void btnCetakPembayaranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakPembayaranActionPerformed
+        printReceipt();
+    }//GEN-LAST:event_btnCetakPembayaranActionPerformed
 
-    }//GEN-LAST:event_tfMaskapaiComponentShown
-
-    private void tfff9ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tfff9ComponentShown
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfff9ComponentShown
-
-    private void BackroundCustomerComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_BackroundCustomerComponentShown
-        // TODO add your handling code here:
-    }//GEN-LAST:event_BackroundCustomerComponentShown
-
-    private void jTablePesawatComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jTablePesawatComponentShown
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTablePesawatComponentShown
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        tfMaskapai.setEditable(false);
+        tfKotaKeberangkatan.setEditable(false);
+        tfDestinasi.setEditable(false);
+        tfTanggalBerangkat.setEditable(false);
+        tfkursiTersedia.setEditable(false);
+        txtTotalBayar.setEditable(false);
+    }//GEN-LAST:event_formComponentShown
 
     /**
      * @param args the command line arguments
@@ -644,13 +728,13 @@ public class MenuCustomer extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel BackroundCustomer;
     private javax.swing.JComboBox<String> CBtiketPenumpang;
+    private javax.swing.JButton btnCetakPembayaran;
+    private javax.swing.JButton btnPesan;
     private javax.swing.JLabel exit;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;

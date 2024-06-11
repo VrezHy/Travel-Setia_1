@@ -1,8 +1,25 @@
+package travelsetia;
+
+import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableRowSorter;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package travelsetia;
+
 
 /**
  *
@@ -10,13 +27,97 @@ package travelsetia;
  */
 public class MenuMember extends javax.swing.JPanel {
 
-    /**
-     * Creates new form MenuMember
-     */
+    private Connection conn;
+    
     public MenuMember() {
         initComponents();
+        loadDataToTable();
     }
 
+     private void loadDataToTable() {
+
+        conn = Koneksi.bukaKoneksi();
+        System.out.println(conn);
+        String sql = "SELECT p.idPesawat, p.namaPesawat, b.namaBandara AS kotaKeberangkatan, p.destinasi, jp.tanggalKeberangkatan, p.kursiTersedia, p.harga, p.statusKursi\n"
+                + "FROM pesawat p \n"
+                + "LEFT JOIN bandara b ON p.destinasi = b.kota\n"
+                + "LEFT JOIN jadwalpenerbangan jp ON p.idPesawat = jp.idPesawat\n"
+                + "ORDER BY jp.tanggalKeberangkatan ASC;";
+        try {
+            PreparedStatement pst = conn.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+
+            DefaultTableModel model = new DefaultTableModel();
+            model.setColumnIdentifiers(new Object[]{"ID Pesawat", "Nama Pesawat", "Kota Keberangkatan", "Destinasi", "Tanggal Keberangkatan", "Kursi Tersedia", "Harga", "Status Kursi"});
+
+            while (rs.next()) {
+                
+                String statusKursi;
+                if (rs.getInt("kursiTersedia") > 0){
+                    statusKursi = "ada";
+                } else {
+                    statusKursi = " habis ";
+                }
+                model.addRow(new Object[]{
+                    rs.getInt("idPesawat"),
+                    rs.getString("namaPesawat"),
+                    rs.getString("kotaKeberangkatan"),
+                    rs.getString("destinasi"),
+                    rs.getString("tanggalKeberangkatan"),
+                    rs.getInt("kursiTersedia"),
+                    rs.getInt("harga"),
+                    statusKursi
+                    
+                });
+            }
+
+            tabelPenumpang.setModel(model);
+            tabelPenumpang.setDefaultEditor(Object.class, null);
+
+        } catch (Exception ex) {
+            System.out.println("Error : " + ex.getMessage());
+        }
+    }
+     
+     private void deleteSelectedRow() {
+        int row = tabelPenumpang.getSelectedRow();
+        if (row != -1) {
+            DefaultTableModel model = (DefaultTableModel) tabelPenumpang.getModel();
+            int idPesawat = (int) model.getValueAt(row, 0);
+
+            // Hapus dari database
+            String sql = "DELETE FROM pesawat WHERE idPesawat = ?";
+            try {
+                PreparedStatement pst = conn.prepareStatement(sql);
+                pst.setInt(1, idPesawat);
+                pst.executeUpdate();
+                System.out.println("Row deleted successfully.");
+            } catch (Exception ex) {
+                System.out.println("Error : " + ex.getMessage());
+            }
+
+            // Hapus dari tabel
+            model.removeRow(row);
+        }
+    }
+     
+     private int hitungTiketTerjual(int idPesawat) {
+    int totalTiketTerjual = 0;
+    String sql = "SELECT SUM(jumlahTiket) AS total FROM booking WHERE idPesawat = ?";
+    try {
+        PreparedStatement pst = conn.prepareStatement(sql);
+        pst.setInt(1, idPesawat);
+        ResultSet rs = pst.executeQuery();
+        if (rs.next()) {
+            totalTiketTerjual = rs.getInt("total");
+        }
+    } catch (SQLException e) {
+        System.out.println("Error retrieving total tiket terjual: " + e.getMessage());
+    }
+    return totalTiketTerjual;
+}
+
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -28,7 +129,7 @@ public class MenuMember extends javax.swing.JPanel {
 
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabelPenumpang = new javax.swing.JTable();
         iconMember = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jButton6 = new javax.swing.JButton();
@@ -42,7 +143,7 @@ public class MenuMember extends javax.swing.JPanel {
         jLabel2.setText("Data Akun Penumpang");
         add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 30, 190, 30));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabelPenumpang.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -53,7 +154,7 @@ public class MenuMember extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tabelPenumpang);
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, 760, 430));
 
@@ -72,8 +173,18 @@ public class MenuMember extends javax.swing.JPanel {
         jButton6.setText("Hapus");
         jButton6.setBorder(null);
         jButton6.setPreferredSize(new java.awt.Dimension(78, 25));
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
         add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 70, 140, 50));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+             deleteSelectedRow();
+
+    }//GEN-LAST:event_jButton6ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -82,6 +193,6 @@ public class MenuMember extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tabelPenumpang;
     // End of variables declaration//GEN-END:variables
 }
