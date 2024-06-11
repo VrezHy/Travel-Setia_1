@@ -115,6 +115,8 @@ public class MenuCustomer extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
+        CBtiketPenumpang = new javax.swing.JComboBox<>();
+        jLabel20 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTablePesawat = new javax.swing.JTable();
@@ -338,8 +340,8 @@ public class MenuCustomer extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Total Bayar");
-        tfff9.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 200, 100, 30));
+        jLabel3.setText("Jumlah Tiket Penumpang");
+        tfff9.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 150, 210, 40));
 
         jLabel16.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(255, 255, 255));
@@ -364,6 +366,19 @@ public class MenuCustomer extends javax.swing.JFrame {
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel19.setText("Tanggal Berangkat");
         tfff9.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(32, 180, 160, 40));
+
+        CBtiketPenumpang.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        CBtiketPenumpang.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CBtiketPenumpangActionPerformed(evt);
+            }
+        });
+        tfff9.add(CBtiketPenumpang, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 150, 70, 40));
+
+        jLabel20.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
+        jLabel20.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel20.setText("Total Bayar");
+        tfff9.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 200, 100, 30));
 
         jPanel5.add(tfff9, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 220, 990, 360));
 
@@ -542,6 +557,10 @@ public class MenuCustomer extends javax.swing.JFrame {
         txtTotalBayar.setText(harga);
     }//GEN-LAST:event_jTablePesawatMouseClicked
 
+    private void CBtiketPenumpangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CBtiketPenumpangActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CBtiketPenumpangActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -579,6 +598,7 @@ public class MenuCustomer extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel BackroundCustomer;
+    private javax.swing.JComboBox<String> CBtiketPenumpang;
     private javax.swing.JLabel exit;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -600,6 +620,7 @@ public class MenuCustomer extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
