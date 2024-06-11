@@ -14,6 +14,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList; 
+import javax.swing.JTextField;
+import javax.swing.RowFilter;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -33,6 +36,8 @@ public class MenuCustomer extends javax.swing.JFrame {
         initComponents();
         txtCariPenerbangan.setBackground(new java.awt.Color(0, 0, 0, 1));
         txtTotalBayar.setBackground(new java.awt.Color(0, 0, 0, 1));
+        
+        
         conn = Koneksi.bukaKoneksi();
         String sql = "SELECT p.idPesawat, p.namaPesawat, b.idBandara, b.namaBandara AS kotaKeberangkatan, p.destinasi, p.kursiTersedia, p.harga, jp.tanggalKeberangkatan\n"
                 + "FROM pesawat p \n"
@@ -282,6 +287,11 @@ public class MenuCustomer extends javax.swing.JFrame {
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tfff9.setBackground(new java.awt.Color(53, 114, 239));
+        tfff9.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                tfff9ComponentShown(evt);
+            }
+        });
         tfff9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         txtTotalBayar.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
@@ -315,6 +325,11 @@ public class MenuCustomer extends javax.swing.JFrame {
         jLabel15.setText("___________________________________________________________");
         tfff9.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 260, 290, -1));
 
+        tfMaskapai.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                tfMaskapaiComponentShown(evt);
+            }
+        });
         tfMaskapai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tfMaskapaiActionPerformed(evt);
@@ -388,18 +403,20 @@ public class MenuCustomer extends javax.swing.JFrame {
 
         jTablePesawat.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
-                "Maskapai", "Lokasi Keberangkatan", "Destinasi", "Tanggal Keberangkatan", "Status Kursi"
+
             }
         ));
         jTablePesawat.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTablePesawatMouseClicked(evt);
+            }
+        });
+        jTablePesawat.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                jTablePesawatComponentShown(evt);
             }
         });
         jScrollPane3.setViewportView(jTablePesawat);
@@ -435,6 +452,11 @@ public class MenuCustomer extends javax.swing.JFrame {
 
         BackroundCustomer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/pexels-jerry-wang-2135752-3768652.jpg"))); // NOI18N
         BackroundCustomer.setText("jLabel1");
+        BackroundCustomer.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                BackroundCustomerComponentShown(evt);
+            }
+        });
         jPanel5.add(BackroundCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -7, 1320, 680));
 
         jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 101, 1320, 670));
@@ -507,12 +529,16 @@ public class MenuCustomer extends javax.swing.JFrame {
     }//GEN-LAST:event_exitMouseClicked
 
     private void minimizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minimizeMouseClicked
-        // TODO add your handling code here:
+        // minimize applikasi
         this.setExtendedState(MenuCustomer.ICONIFIED);
     }//GEN-LAST:event_minimizeMouseClicked
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+        // button cari penerbangan
+        DefaultTableModel BTCari = (DefaultTableModel) jTablePesawat.getModel();
+        TableRowSorter<DefaultTableModel> Cari = new TableRowSorter<>(BTCari);
+        jTablePesawat.setRowSorter(Cari);
+        Cari.setRowFilter(RowFilter.regexFilter(txtCariPenerbangan.getText()));
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void txtCariPenerbanganActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCariPenerbanganActionPerformed
@@ -555,11 +581,30 @@ public class MenuCustomer extends javax.swing.JFrame {
         tfTanggalBerangkat.setText(waktuKeberangkatan);
         tfkursiTersedia.setText(kursiTersedia);
         txtTotalBayar.setText(harga);
+
+        
     }//GEN-LAST:event_jTablePesawatMouseClicked
 
     private void CBtiketPenumpangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CBtiketPenumpangActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_CBtiketPenumpangActionPerformed
+
+    private void tfMaskapaiComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tfMaskapaiComponentShown
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_tfMaskapaiComponentShown
+
+    private void tfff9ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tfff9ComponentShown
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfff9ComponentShown
+
+    private void BackroundCustomerComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_BackroundCustomerComponentShown
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BackroundCustomerComponentShown
+
+    private void jTablePesawatComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jTablePesawatComponentShown
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTablePesawatComponentShown
 
     /**
      * @param args the command line arguments

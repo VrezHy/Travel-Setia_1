@@ -32,11 +32,6 @@ public class MenuDashboard2 extends javax.swing.JPanel {
         jLabel17 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        PanelKursi = new javax.swing.JPanel();
-        jPanel8 = new javax.swing.JPanel();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
         PanelMember = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
@@ -112,63 +107,7 @@ public class MenuDashboard2 extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jPanel1.add(PanelPesawat, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 50, 150, 130));
-
-        PanelKursi.setBackground(new java.awt.Color(53, 114, 239));
-        PanelKursi.setPreferredSize(new java.awt.Dimension(133, 130));
-
-        jPanel8.setBackground(new java.awt.Color(51, 153, 255));
-
-        jLabel16.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel16.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        jLabel16.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel16.setText("Kursi");
-
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
-        jLabel10.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel10.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setText("9999");
-
-        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/Sitting on Chair.png"))); // NOI18N
-
-        javax.swing.GroupLayout PanelKursiLayout = new javax.swing.GroupLayout(PanelKursi);
-        PanelKursi.setLayout(PanelKursiLayout);
-        PanelKursiLayout.setHorizontalGroup(
-            PanelKursiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(PanelKursiLayout.createSequentialGroup()
-                .addGap(59, 59, 59)
-                .addComponent(jLabel9)
-                .addContainerGap(61, Short.MAX_VALUE))
-        );
-        PanelKursiLayout.setVerticalGroup(
-            PanelKursiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelKursiLayout.createSequentialGroup()
-                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        jPanel1.add(PanelKursi, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 50, 150, 130));
+        jPanel1.add(PanelPesawat, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 50, 150, 130));
 
         PanelMember.setBackground(new java.awt.Color(53, 114, 239));
         PanelMember.setPreferredSize(new java.awt.Dimension(133, 130));
@@ -179,7 +118,7 @@ public class MenuDashboard2 extends javax.swing.JPanel {
         jLabel15.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(255, 255, 255));
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel15.setText("Penumpang");
+        jLabel15.setText("Akun Penumpang");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -224,7 +163,7 @@ public class MenuDashboard2 extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jPanel1.add(PanelMember, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 50, 150, 130));
+        jPanel1.add(PanelMember, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 50, 150, 130));
 
         PanelBandara.setBackground(new java.awt.Color(53, 114, 239));
         PanelBandara.setPreferredSize(new java.awt.Dimension(133, 130));
@@ -280,7 +219,7 @@ public class MenuDashboard2 extends javax.swing.JPanel {
                 .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jPanel1.add(PanelBandara, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 50, 150, 130));
+        jPanel1.add(PanelBandara, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 50, 150, 130));
 
         jTable1.setForeground(new java.awt.Color(255, 255, 255));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -296,23 +235,23 @@ public class MenuDashboard2 extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 240, 730, 320));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 220, 760, 340));
 
         jLabel1.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(53, 114, 239));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel1.setText("LAPORAN");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 210, 180, 30));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 190, 180, 30));
 
         jLabel2.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(53, 114, 239));
         jLabel2.setText("Master Data > Dashboard");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 0, 190, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 0, 190, 30));
 
-        jLabel3.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(53, 114, 239));
         jLabel3.setText("JUMLAH YANG BEROPRASI");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 20, -1, -1));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 10, -1, -1));
 
         iconDash.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/Laptop Metrics.png"))); // NOI18N
         jPanel1.add(iconDash, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 0, -1, -1));
@@ -342,29 +281,24 @@ public class MenuDashboard2 extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelBandara;
-    private javax.swing.JPanel PanelKursi;
     private javax.swing.JPanel PanelMember;
     private javax.swing.JPanel PanelPesawat;
     private javax.swing.JLabel iconDash;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;

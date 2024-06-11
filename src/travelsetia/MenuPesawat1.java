@@ -33,6 +33,13 @@ public class MenuPesawat1 extends javax.swing.JPanel {
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         iconPesawat = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
+        jTextField3 = new javax.swing.JTextField();
+        jTextField4 = new javax.swing.JTextField();
+        jTextField5 = new javax.swing.JTextField();
+        jTextField6 = new javax.swing.JTextField();
 
         setBackground(new java.awt.Color(53, 114, 239));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -50,12 +57,12 @@ public class MenuPesawat1 extends javax.swing.JPanel {
         ));
         jScrollPane2.setViewportView(jTable2);
 
-        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 150, 760, -1));
+        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 250, 760, 310));
 
-        jLabel2.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Master Data > Pesawat");
-        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 0, 190, 30));
+        jLabel2.setText("Data Pesawat");
+        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 30, 120, 30));
 
         jButton4.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(102, 153, 255));
@@ -63,7 +70,7 @@ public class MenuPesawat1 extends javax.swing.JPanel {
         jButton4.setText("Tambah");
         jButton4.setBorder(null);
         jButton4.setPreferredSize(new java.awt.Dimension(78, 25));
-        add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 60, 130, 60));
+        add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 70, 140, 50));
 
         jButton5.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jButton5.setForeground(new java.awt.Color(102, 153, 255));
@@ -71,7 +78,7 @@ public class MenuPesawat1 extends javax.swing.JPanel {
         jButton5.setText("Ubah");
         jButton5.setBorder(null);
         jButton5.setPreferredSize(new java.awt.Dimension(78, 25));
-        add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 60, 130, 60));
+        add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 130, 140, 50));
 
         jButton6.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jButton6.setForeground(new java.awt.Color(102, 153, 255));
@@ -79,11 +86,49 @@ public class MenuPesawat1 extends javax.swing.JPanel {
         jButton6.setText("Hapus");
         jButton6.setBorder(null);
         jButton6.setPreferredSize(new java.awt.Dimension(78, 25));
-        add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 60, 130, 60));
+        add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 190, 140, 50));
 
         iconPesawat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/Plane.png"))); // NOI18N
-        add(iconPesawat, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 0, -1, -1));
+        add(iconPesawat, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 30, -1, -1));
+
+        jLabel3.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("Master Data > Pesawat");
+        add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 0, 260, 30));
+
+        jTextField1.setForeground(new java.awt.Color(153, 153, 153));
+        jTextField1.setText("Harga");
+        add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 190, 290, 50));
+
+        jTextField2.setForeground(new java.awt.Color(153, 153, 153));
+        jTextField2.setText("Nama Pesawat");
+        add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 70, 290, 50));
+
+        jTextField3.setForeground(new java.awt.Color(153, 153, 153));
+        jTextField3.setText("Kota Keberangkatan");
+        add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, 290, 50));
+
+        jTextField4.setForeground(new java.awt.Color(153, 153, 153));
+        jTextField4.setText("Destinasi");
+        add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 190, 290, 50));
+
+        jTextField5.setForeground(new java.awt.Color(153, 153, 153));
+        jTextField5.setText("Tanggal Keberangkatan");
+        add(jTextField5, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 70, 290, 50));
+
+        jTextField6.setForeground(new java.awt.Color(153, 153, 153));
+        jTextField6.setText("Kursi Tersedia");
+        jTextField6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField6ActionPerformed(evt);
+            }
+        });
+        add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 130, 290, 50));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField6ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -92,7 +137,14 @@ public class MenuPesawat1 extends javax.swing.JPanel {
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable2;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField jTextField6;
     // End of variables declaration//GEN-END:variables
 }

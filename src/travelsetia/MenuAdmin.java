@@ -37,10 +37,6 @@ public class MenuAdmin extends javax.swing.JFrame {
         PgarisMember = new javax.swing.JPanel();
         iconMember = new javax.swing.JLabel();
         JLMember = new javax.swing.JLabel();
-        PmainKursi = new javax.swing.JPanel();
-        PgarisKursi = new javax.swing.JPanel();
-        iconKursi = new javax.swing.JLabel();
-        JLKursi = new javax.swing.JLabel();
         PmainPesawat = new javax.swing.JPanel();
         PgarisPesawat = new javax.swing.JPanel();
         iconPesawat = new javax.swing.JLabel();
@@ -130,67 +126,13 @@ public class MenuAdmin extends javax.swing.JFrame {
         );
         PmainMemberLayout.setVerticalGroup(
             PmainMemberLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PmainMemberLayout.createSequentialGroup()
+            .addGroup(PmainMemberLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(PmainMemberLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(PgarisMember, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(iconMember, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE))
                 .addContainerGap())
             .addComponent(JLMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        PmainKursi.setBackground(new java.awt.Color(255, 255, 255));
-
-        PgarisKursi.setBackground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout PgarisKursiLayout = new javax.swing.GroupLayout(PgarisKursi);
-        PgarisKursi.setLayout(PgarisKursiLayout);
-        PgarisKursiLayout.setHorizontalGroup(
-            PgarisKursiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 14, Short.MAX_VALUE)
-        );
-        PgarisKursiLayout.setVerticalGroup(
-            PgarisKursiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
-        iconKursi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/Sitting on Chair.png"))); // NOI18N
-
-        JLKursi.setText("Kursi");
-        JLKursi.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                JLKursiMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                JLKursiMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                JLKursiMouseExited(evt);
-            }
-        });
-
-        javax.swing.GroupLayout PmainKursiLayout = new javax.swing.GroupLayout(PmainKursi);
-        PmainKursi.setLayout(PmainKursiLayout);
-        PmainKursiLayout.setHorizontalGroup(
-            PmainKursiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PmainKursiLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(PgarisKursi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(iconKursi, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(JLKursi, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        PmainKursiLayout.setVerticalGroup(
-            PmainKursiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PmainKursiLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(PmainKursiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(iconKursi, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
-                    .addComponent(PgarisKursi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-            .addComponent(JLKursi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         PmainPesawat.setBackground(new java.awt.Color(255, 255, 255));
@@ -208,6 +150,7 @@ public class MenuAdmin extends javax.swing.JFrame {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
+        iconPesawat.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         iconPesawat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/Plane.png"))); // NOI18N
 
         JLPesawat.setText("Pesawat");
@@ -250,6 +193,7 @@ public class MenuAdmin extends javax.swing.JFrame {
         PmainDashboard.setBackground(new java.awt.Color(255, 255, 255));
         PmainDashboard.setPreferredSize(new java.awt.Dimension(253, 48));
 
+        iconDash.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         iconDash.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/Laptop Metrics.png"))); // NOI18N
 
         JLDashboard.setText("Dashboard");
@@ -318,8 +262,7 @@ public class MenuAdmin extends javax.swing.JFrame {
                             .addComponent(jLabel15)
                             .addComponent(jLabel12)))
                     .addComponent(PmainDashboard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(PmainKursi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
         PAdminLayout.setVerticalGroup(
@@ -339,10 +282,8 @@ public class MenuAdmin extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(PmainPesawat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(PmainKursi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(PmainMember, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(432, Short.MAX_VALUE))
+                .addContainerGap(486, Short.MAX_VALUE))
         );
 
         getContentPane().add(PAdmin, java.awt.BorderLayout.LINE_START);
@@ -397,7 +338,7 @@ public class MenuAdmin extends javax.swing.JFrame {
             panel_tengahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_tengahLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panelTengahDashboard, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE)
+                .addComponent(panelTengahDashboard, javax.swing.GroupLayout.DEFAULT_SIZE, 912, Short.MAX_VALUE)
                 .addContainerGap())
         );
         panel_tengahLayout.setVerticalGroup(
@@ -487,29 +428,6 @@ public class MenuAdmin extends javax.swing.JFrame {
         PgarisMember.setBackground(new Color(255,255,255));
     }//GEN-LAST:event_JLMemberMouseExited
 
-    private void JLKursiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLKursiMouseClicked
-        // TODO add your handling code here:
-        PmainKursi.setBackground(new Color(240,240,240));
-        PgarisKursi.setBackground(new Color(102,153,255));
-        
-        panelTengahDashboard.removeAll();
-        panelTengahDashboard.add(new MenuKursi1());
-        panelTengahDashboard.repaint();
-        panelTengahDashboard.revalidate();
-    }//GEN-LAST:event_JLKursiMouseClicked
-
-    private void JLKursiMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLKursiMouseEntered
-        // TODO add your handling code here:
-        PmainKursi.setBackground(new Color(250,250,250));
-        PgarisKursi.setBackground(new Color(102,153,255));
-    }//GEN-LAST:event_JLKursiMouseEntered
-
-    private void JLKursiMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLKursiMouseExited
-        // TODO add your handling code here:
-        PmainKursi.setBackground(new Color(255,255,255));
-        PgarisKursi.setBackground(new Color(255,255,255));
-    }//GEN-LAST:event_JLKursiMouseExited
-
     private void minimizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minimizeMouseClicked
         // TODO add your handling code here:
         this.setExtendedState(MenuCustomer.ICONIFIED);
@@ -557,21 +475,17 @@ public class MenuAdmin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel JLDashboard;
-    private javax.swing.JLabel JLKursi;
     private javax.swing.JLabel JLMember;
     private javax.swing.JLabel JLPesawat;
     private javax.swing.JPanel PAdmin;
     private javax.swing.JPanel PgarisDashboard;
-    private javax.swing.JPanel PgarisKursi;
     private javax.swing.JPanel PgarisMember;
     private javax.swing.JPanel PgarisPesawat;
     private javax.swing.JPanel PmainDashboard;
-    private javax.swing.JPanel PmainKursi;
     private javax.swing.JPanel PmainMember;
     private javax.swing.JPanel PmainPesawat;
     private javax.swing.JLabel exit;
     private javax.swing.JLabel iconDash;
-    private javax.swing.JLabel iconKursi;
     private javax.swing.JLabel iconMember;
     private javax.swing.JLabel iconPesawat;
     private javax.swing.JLabel jLabel1;
