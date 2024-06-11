@@ -4,6 +4,8 @@
  */
 package travelsetia;
 
+import java.awt.Color;
+
 /**
  *
  * @author dimas
@@ -34,12 +36,12 @@ public class MenuPesawat1 extends javax.swing.JPanel {
         jButton6 = new javax.swing.JButton();
         iconPesawat = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
-        jTextField6 = new javax.swing.JTextField();
+        tfNamaPesawatUp = new javax.swing.JTextField();
+        tfKotaUp = new javax.swing.JTextField();
+        tfDestinasiUp = new javax.swing.JTextField();
+        tfTanggalUp = new javax.swing.JTextField();
+        tfKursUp = new javax.swing.JTextField();
+        tfHargaUp = new javax.swing.JTextField();
 
         setBackground(new java.awt.Color(53, 114, 239));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -96,39 +98,204 @@ public class MenuPesawat1 extends javax.swing.JPanel {
         jLabel3.setText("Master Data > Pesawat");
         add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 0, 260, 30));
 
-        jTextField1.setForeground(new java.awt.Color(153, 153, 153));
-        jTextField1.setText("Harga");
-        add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 190, 290, 50));
-
-        jTextField2.setForeground(new java.awt.Color(153, 153, 153));
-        jTextField2.setText("Nama Pesawat");
-        add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 70, 290, 50));
-
-        jTextField3.setForeground(new java.awt.Color(153, 153, 153));
-        jTextField3.setText("Kota Keberangkatan");
-        add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, 290, 50));
-
-        jTextField4.setForeground(new java.awt.Color(153, 153, 153));
-        jTextField4.setText("Destinasi");
-        add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 190, 290, 50));
-
-        jTextField5.setForeground(new java.awt.Color(153, 153, 153));
-        jTextField5.setText("Tanggal Keberangkatan");
-        add(jTextField5, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 70, 290, 50));
-
-        jTextField6.setForeground(new java.awt.Color(153, 153, 153));
-        jTextField6.setText("Kursi Tersedia");
-        jTextField6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField6ActionPerformed(evt);
+        tfNamaPesawatUp.setForeground(new java.awt.Color(153, 153, 153));
+        tfNamaPesawatUp.setText("Nama Pesawat");
+        tfNamaPesawatUp.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tfNamaPesawatUpFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfNamaPesawatUpFocusLost(evt);
             }
         });
-        add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 130, 290, 50));
+        tfNamaPesawatUp.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tfNamaPesawatUpKeyTyped(evt);
+            }
+        });
+        add(tfNamaPesawatUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 70, 290, 50));
+
+        tfKotaUp.setForeground(new java.awt.Color(153, 153, 153));
+        tfKotaUp.setText("Kota Keberangkatan");
+        tfKotaUp.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tfKotaUpFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfKotaUpFocusLost(evt);
+            }
+        });
+        add(tfKotaUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, 290, 50));
+
+        tfDestinasiUp.setForeground(new java.awt.Color(153, 153, 153));
+        tfDestinasiUp.setText("Destinasi");
+        tfDestinasiUp.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tfDestinasiUpFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfDestinasiUpFocusLost(evt);
+            }
+        });
+        tfDestinasiUp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfDestinasiUpActionPerformed(evt);
+            }
+        });
+        add(tfDestinasiUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 190, 290, 50));
+
+        tfTanggalUp.setForeground(new java.awt.Color(153, 153, 153));
+        tfTanggalUp.setText("Tanggal Keberangkatan");
+        tfTanggalUp.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tfTanggalUpFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfTanggalUpFocusLost(evt);
+            }
+        });
+        add(tfTanggalUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 70, 290, 50));
+
+        tfKursUp.setForeground(new java.awt.Color(153, 153, 153));
+        tfKursUp.setText("Kursi Tersedia");
+        tfKursUp.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tfKursUpFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfKursUpFocusLost(evt);
+            }
+        });
+        tfKursUp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfKursUpActionPerformed(evt);
+            }
+        });
+        add(tfKursUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 130, 290, 50));
+
+        tfHargaUp.setForeground(new java.awt.Color(153, 153, 153));
+        tfHargaUp.setText("Harga");
+        tfHargaUp.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tfHargaUpFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfHargaUpFocusLost(evt);
+            }
+        });
+        add(tfHargaUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 190, 290, 50));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
+    private void tfKursUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfKursUpActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField6ActionPerformed
+    }//GEN-LAST:event_tfKursUpActionPerformed
+
+    private void tfNamaPesawatUpKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfNamaPesawatUpKeyTyped
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_tfNamaPesawatUpKeyTyped
+
+    private void tfDestinasiUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfDestinasiUpActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfDestinasiUpActionPerformed
+
+    private void tfNamaPesawatUpFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfNamaPesawatUpFocusGained
+        // TODO add your handling code here:
+        if(tfNamaPesawatUp.getText().equals("Nama Pesawat")){
+            tfNamaPesawatUp.setText("");
+            tfNamaPesawatUp.setForeground(new Color(153,153,153));
+        }
+    }//GEN-LAST:event_tfNamaPesawatUpFocusGained
+
+    private void tfNamaPesawatUpFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfNamaPesawatUpFocusLost
+        // TODO add your handling code here:
+        if(tfNamaPesawatUp.getText().equals("")){
+            tfNamaPesawatUp.setText("Nama Pesawat");
+            tfNamaPesawatUp.setForeground(new Color(153,153,153));
+        }
+    }//GEN-LAST:event_tfNamaPesawatUpFocusLost
+
+    private void tfKotaUpFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfKotaUpFocusGained
+        // TODO add your handling code here:
+        if(tfKotaUp.getText().equals("Kota Keberangkatan")){
+            tfKotaUp.setText("");
+            tfKotaUp.setForeground(new Color(153,153,153));
+        }
+    }//GEN-LAST:event_tfKotaUpFocusGained
+
+    private void tfKotaUpFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfKotaUpFocusLost
+        // TODO add your handling code here:
+        if(tfKotaUp.getText().equals("")){
+            tfKotaUp.setText("Kota Keberangkata");
+            tfKotaUp.setForeground(new Color(153,153,153));
+        }
+    }//GEN-LAST:event_tfKotaUpFocusLost
+
+    private void tfDestinasiUpFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfDestinasiUpFocusGained
+        // TODO add your handling code here:
+        if(tfDestinasiUp.getText().equals("Destinasi")){
+            tfDestinasiUp.setText("");
+            tfDestinasiUp.setForeground(new Color(153,153,153));
+        }
+    }//GEN-LAST:event_tfDestinasiUpFocusGained
+
+    private void tfDestinasiUpFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfDestinasiUpFocusLost
+        // TODO add your handling code here:
+        if(tfDestinasiUp.getText().equals("")){
+            tfDestinasiUp.setText("Destinasi");
+            tfDestinasiUp.setForeground(new Color(153,153,153));
+        }
+    }//GEN-LAST:event_tfDestinasiUpFocusLost
+
+    private void tfTanggalUpFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfTanggalUpFocusGained
+        // TODO add your handling code here:
+        if(tfTanggalUp.getText().equals("Tanggal Keberangkatan")){
+            tfTanggalUp.setText("");
+            tfTanggalUp.setForeground(new Color(153,153,153));
+        }
+    }//GEN-LAST:event_tfTanggalUpFocusGained
+
+    private void tfTanggalUpFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfTanggalUpFocusLost
+        // TODO add your handling code here:
+        if(tfTanggalUp.getText().equals("")){
+            tfTanggalUp.setText("Tanggal Keberangkatan");
+            tfTanggalUp.setForeground(new Color(153,153,153));
+        }
+    }//GEN-LAST:event_tfTanggalUpFocusLost
+
+    private void tfKursUpFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfKursUpFocusGained
+        // TODO add your handling code here:
+        if(tfKursUp.getText().equals("Kursi Tersedia")){
+            tfKursUp.setText("");
+            tfKursUp.setForeground(new Color(153,153,153));
+        }
+    }//GEN-LAST:event_tfKursUpFocusGained
+
+    private void tfKursUpFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfKursUpFocusLost
+        // TODO add your handling code here:
+        if(tfKursUp.getText().equals("")){
+            tfKursUp.setText("Kursi Tersedia");
+            tfKursUp.setForeground(new Color(153,153,153));
+        }
+    }//GEN-LAST:event_tfKursUpFocusLost
+
+    private void tfHargaUpFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfHargaUpFocusGained
+        // TODO add your handling code here:
+        if(tfHargaUp.getText().equals("Harga")){
+            tfHargaUp.setText("");
+            tfHargaUp.setForeground(new Color(153,153,153));
+        }
+        
+    }//GEN-LAST:event_tfHargaUpFocusGained
+
+    private void tfHargaUpFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfHargaUpFocusLost
+        // TODO add your handling code here:
+        if(tfHargaUp.getText().equals("")){
+            tfHargaUp.setText("Harga");
+            tfHargaUp.setForeground(new Color(153,153,153));
+        }
+        
+    }//GEN-LAST:event_tfHargaUpFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -140,11 +307,11 @@ public class MenuPesawat1 extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
+    private javax.swing.JTextField tfDestinasiUp;
+    private javax.swing.JTextField tfHargaUp;
+    private javax.swing.JTextField tfKotaUp;
+    private javax.swing.JTextField tfKursUp;
+    private javax.swing.JTextField tfNamaPesawatUp;
+    private javax.swing.JTextField tfTanggalUp;
     // End of variables declaration//GEN-END:variables
 }
