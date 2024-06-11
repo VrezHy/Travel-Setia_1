@@ -34,7 +34,7 @@ public class MenuCustomer extends javax.swing.JFrame {
         txtCariPenerbangan.setBackground(new java.awt.Color(0, 0, 0, 1));
         txtTotalBayar.setBackground(new java.awt.Color(0, 0, 0, 1));
         conn = Koneksi.bukaKoneksi();
-        String sql = "SELECT p.idPesawat, p.namaPesawat, b.idBandara, b.namaBandara AS kotaKeberangkatan, p.destinasi, p.statusKursi, p.harga, jp.tanggalKeberangkatan\n"
+        String sql = "SELECT p.idPesawat, p.namaPesawat, b.idBandara, b.namaBandara AS kotaKeberangkatan, p.destinasi, p.kursiTersedia, p.harga, jp.tanggalKeberangkatan\n"
                 + "FROM pesawat p \n"
                 + "LEFT JOIN booking bo ON p.idPesawat = bo.idPesawat \n"
                 + "LEFT JOIN bandara b ON p.destinasi = b.kota\n"
@@ -46,7 +46,7 @@ public class MenuCustomer extends javax.swing.JFrame {
 
             // Process the ResultSet and display data in JTable
             DefaultTableModel model = new DefaultTableModel();
-            model.setColumnIdentifiers(new Object[]{"ID Pesawat", "Nama Pesawat", "Kota Keberangkatan", "Destinasi", "Tanggal Keberangkatan", "Status Kursi", "Harga"});
+            model.setColumnIdentifiers(new Object[]{"ID Pesawat", "Nama Pesawat", "Kota Keberangkatan", "Destinasi", "Tanggal Keberangkatan", "Kursi Tersedia", "Harga"});
 
             while (rs.next()) {
                 model.addRow(new Object[]{
@@ -55,7 +55,7 @@ public class MenuCustomer extends javax.swing.JFrame {
                     rs.getString("kotaKeberangkatan"),
                     rs.getString("destinasi"),
                     rs.getString("tanggalKeberangkatan"),
-                    rs.getString("statusKursi"),
+                    rs.getString("kursiTersedia"),
                     rs.getInt("harga")
                 });
             }
@@ -109,7 +109,7 @@ public class MenuCustomer extends javax.swing.JFrame {
         tfKotaKeberangkatan = new javax.swing.JTextField();
         tfDestinasi = new javax.swing.JTextField();
         tfTanggalBerangkat = new javax.swing.JTextField();
-        tfStatusKursi = new javax.swing.JTextField();
+        tfkursiTersedia = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
@@ -295,8 +295,8 @@ public class MenuCustomer extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Status Kursi");
-        tfff9.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(82, 230, 110, 40));
+        jLabel1.setText("Kursi Tersedia");
+        tfff9.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 230, 150, 40));
 
         jButton4.setText("Pesan Sekarang");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -329,12 +329,12 @@ public class MenuCustomer extends javax.swing.JFrame {
         tfff9.add(tfDestinasi, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 130, 370, 40));
         tfff9.add(tfTanggalBerangkat, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 180, 370, 40));
 
-        tfStatusKursi.addActionListener(new java.awt.event.ActionListener() {
+        tfkursiTersedia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfStatusKursiActionPerformed(evt);
+                tfkursiTersediaActionPerformed(evt);
             }
         });
-        tfff9.add(tfStatusKursi, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 230, 370, 40));
+        tfff9.add(tfkursiTersedia, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 230, 370, 40));
 
         jLabel3.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -520,9 +520,9 @@ public class MenuCustomer extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_tfDestinasiActionPerformed
 
-    private void tfStatusKursiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfStatusKursiActionPerformed
+    private void tfkursiTersediaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfkursiTersediaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_tfStatusKursiActionPerformed
+    }//GEN-LAST:event_tfkursiTersediaActionPerformed
 
     private void jTablePesawatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablePesawatMouseClicked
         int row = jTablePesawat.getSelectedRow();
@@ -531,14 +531,14 @@ public class MenuCustomer extends javax.swing.JFrame {
         String kotaKeberangkatan = model.getValueAt(row, 2) != null ? model.getValueAt(row, 2).toString() : "";
         String destinasi = model.getValueAt(row, 3) != null ? model.getValueAt(row, 3).toString() : "";
         String waktuKeberangkatan = model.getValueAt(row, 4) != null ? model.getValueAt(row, 4).toString() : "";
-        String statusKursi = model.getValueAt(row, 5) != null ? model.getValueAt(row, 5).toString() : "";
+        String kursiTersedia = model.getValueAt(row, 5) != null ? model.getValueAt(row, 5).toString() : "";
         String harga = model.getValueAt(row, 6) != null ? model.getValueAt(row, 6).toString() : "";
 
         tfMaskapai.setText(namaPesawat);
         tfKotaKeberangkatan.setText(kotaKeberangkatan);
         tfDestinasi.setText(destinasi);
         tfTanggalBerangkat.setText(waktuKeberangkatan);
-        tfStatusKursi.setText(statusKursi);
+        tfkursiTersedia.setText(kursiTersedia);
         txtTotalBayar.setText(harga);
     }//GEN-LAST:event_jTablePesawatMouseClicked
 
@@ -622,9 +622,9 @@ public class MenuCustomer extends javax.swing.JFrame {
     private javax.swing.JTextField tfDestinasi;
     private javax.swing.JTextField tfKotaKeberangkatan;
     private javax.swing.JTextField tfMaskapai;
-    private javax.swing.JTextField tfStatusKursi;
     private javax.swing.JTextField tfTanggalBerangkat;
     private javax.swing.JPanel tfff9;
+    private javax.swing.JTextField tfkursiTersedia;
     private javax.swing.JTextField txtCariPenerbangan;
     private javax.swing.JTextField txtTotalBayar;
     // End of variables declaration//GEN-END:variables
