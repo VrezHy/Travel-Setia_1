@@ -19,8 +19,6 @@ import javax.swing.table.DefaultTableModel;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-
-
 /**
  *
  * @author dimas
@@ -28,46 +26,38 @@ import javax.swing.table.DefaultTableModel;
 public class MenuMember extends javax.swing.JPanel {
 
     private Connection conn;
-    
+
     public MenuMember() {
         initComponents();
         loadDataToTable();
+
     }
 
-     private void loadDataToTable() {
+    private void loadDataToTable() {
 
         conn = Koneksi.bukaKoneksi();
         System.out.println(conn);
-        String sql = "SELECT p.idPesawat, p.namaPesawat, b.namaBandara AS kotaKeberangkatan, p.destinasi, jp.tanggalKeberangkatan, p.kursiTersedia, p.harga, p.statusKursi\n"
-                + "FROM pesawat p \n"
-                + "LEFT JOIN bandara b ON p.destinasi = b.kota\n"
-                + "LEFT JOIN jadwalpenerbangan jp ON p.idPesawat = jp.idPesawat\n"
-                + "ORDER BY jp.tanggalKeberangkatan ASC;";
+        String sql = "SELECT a.idPenumpang AS idAkun, a.email AS email_akun, a.userPassword AS userPassword_akun, p.destinasi AS destinasi_pesawat FROM akun a LEFT JOIN pesawat p ON a.idPenumpang = p.idPesawat; ";
         try {
             PreparedStatement pst = conn.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
 
             DefaultTableModel model = new DefaultTableModel();
-            model.setColumnIdentifiers(new Object[]{"ID Pesawat", "Nama Pesawat", "Kota Keberangkatan", "Destinasi", "Tanggal Keberangkatan", "Kursi Tersedia", "Harga", "Status Kursi"});
+            model.setColumnIdentifiers(new Object[]{"ID Akun", "Email Pengguna", "Password Pengguna", "Destinasi", "Tiket Terbeli"});
 
             while (rs.next()) {
-                
-                String statusKursi;
-                if (rs.getInt("kursiTersedia") > 0){
-                    statusKursi = "ada";
-                } else {
-                    statusKursi = " habis ";
-                }
+               
+                int idPenumpang = rs.getInt("idAkun");
+                int tiketTerjual = hitungTiketTerjual(idPenumpang);
+
+               
                 model.addRow(new Object[]{
-                    rs.getInt("idPesawat"),
-                    rs.getString("namaPesawat"),
-                    rs.getString("kotaKeberangkatan"),
-                    rs.getString("destinasi"),
-                    rs.getString("tanggalKeberangkatan"),
-                    rs.getInt("kursiTersedia"),
-                    rs.getInt("harga"),
-                    statusKursi
-                    
+                    rs.getInt("idAkun"),
+                    rs.getString("email_akun"),
+                    rs.getString("userPassword_akun"),
+                    rs.getString("destinasi_pesawat"),
+                    tiketTerjual
+
                 });
             }
 
@@ -78,15 +68,15 @@ public class MenuMember extends javax.swing.JPanel {
             System.out.println("Error : " + ex.getMessage());
         }
     }
-     
-     private void deleteSelectedRow() {
+
+    private void deleteSelectedRow() {
         int row = tabelPenumpang.getSelectedRow();
         if (row != -1) {
             DefaultTableModel model = (DefaultTableModel) tabelPenumpang.getModel();
             int idPesawat = (int) model.getValueAt(row, 0);
 
             // Hapus dari database
-            String sql = "DELETE FROM pesawat WHERE idPesawat = ?";
+            String sql = "DELETE FROM pesawat WHERE idPenumpang = ?";
             try {
                 PreparedStatement pst = conn.prepareStatement(sql);
                 pst.setInt(1, idPesawat);
@@ -100,24 +90,23 @@ public class MenuMember extends javax.swing.JPanel {
             model.removeRow(row);
         }
     }
-     
-     private int hitungTiketTerjual(int idPesawat) {
-    int totalTiketTerjual = 0;
-    String sql = "SELECT SUM(jumlahTiket) AS total FROM booking WHERE idPesawat = ?";
-    try {
-        PreparedStatement pst = conn.prepareStatement(sql);
-        pst.setInt(1, idPesawat);
-        ResultSet rs = pst.executeQuery();
-        if (rs.next()) {
-            totalTiketTerjual = rs.getInt("total");
-        }
-    } catch (SQLException e) {
-        System.out.println("Error retrieving total tiket terjual: " + e.getMessage());
-    }
-    return totalTiketTerjual;
-}
 
-    
+    private int hitungTiketTerjual(int idPesawat) {
+        int totalTiketTerjual = 0;
+        String sql = "SELECT SUM(jumlahTiket) AS total FROM booking WHERE idPesawat = ?";
+        try {
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, idPesawat);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                totalTiketTerjual = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving total tiket terjual: " + e.getMessage());
+        }
+        return totalTiketTerjual;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -182,7 +171,7 @@ public class MenuMember extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-             deleteSelectedRow();
+        deleteSelectedRow();
 
     }//GEN-LAST:event_jButton6ActionPerformed
 

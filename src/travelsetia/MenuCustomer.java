@@ -83,6 +83,7 @@ public class MenuCustomer extends javax.swing.JFrame {
 
     private void updateTextFields() {
         int row = jTablePesawat.getSelectedRow();
+        row = jTablePesawat.convertRowIndexToModel(row);
         DefaultTableModel model = (DefaultTableModel) jTablePesawat.getModel();
         String namaPesawat = model.getValueAt(row, 1) != null ? model.getValueAt(row, 1).toString() : "";
         String kotaKeberangkatan = model.getValueAt(row, 2) != null ? model.getValueAt(row, 2).toString() : "";
@@ -136,11 +137,12 @@ public class MenuCustomer extends javax.swing.JFrame {
                 int kursiBaru = kursiTersedia - jumlahTiket;
                 updateDatabase(idPesawat, kursiBaru);
                 catatPembelian(idPesawat, jumlahTiket); // Tambahkan ini untuk mencatat pembelian tiket
+                JOptionPane.showMessageDialog(this, "berhasil!");
             } else {
-                System.out.println("Jumlah tiket melebihi kursi tersedia");
+                JOptionPane.showMessageDialog(this, "Maaf, tiket untuk penerbangan ini sudah habis.", "Peringatan", JOptionPane.WARNING_MESSAGE);
             }
         } else {
-            System.out.println("Tidak ada baris yang dipilih");
+           JOptionPane.showMessageDialog(this, "Tidak ada baris yang dipilih!.", "Peringatan", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -169,20 +171,33 @@ public class MenuCustomer extends javax.swing.JFrame {
     }
 
     private void printReceipt() {
-        int jumlahTiket = Integer.parseInt(CBtiketPenumpang.getSelectedItem().toString());
-        String totalHarga = txtTotalBayar.getText();
-        String maskapai = tfMaskapai.getText();
-        String kotaKeberangkatan = tfKotaKeberangkatan.getText();
-        String destinasi = tfDestinasi.getText();
-        String tanggalBerangkat = tfTanggalBerangkat.getText();
+    int selectedRow = jTablePesawat.getSelectedRow();
+    if (selectedRow != -1) {
+        int kursiTersedia = Integer.parseInt(jTablePesawat.getValueAt(selectedRow, 5).toString());
+        
+        if (kursiTersedia > 0) {
+            int jumlahTiket = Integer.parseInt(CBtiketPenumpang.getSelectedItem().toString());
+            String totalHarga = txtTotalBayar.getText();
+            String maskapai = tfMaskapai.getText();
+            String kotaKeberangkatan = tfKotaKeberangkatan.getText();
+            String destinasi = tfDestinasi.getText();
+            String tanggalBerangkat = tfTanggalBerangkat.getText();
 
-        String message = String.format(
-                "Jumlah Tiket: %s\nTotalHarga: %s\nMaskapai: %s\nKota Keberangkatan: %s\nDestinasi: %s\nTanggal Berangkat: %s\n",
-                jumlahTiket, totalHarga, maskapai, kotaKeberangkatan, destinasi, tanggalBerangkat
-        );
+            String message = String.format(
+                    "Jumlah Tiket: %s\nTotal Harga: %s\nMaskapai: %s\nKota Keberangkatan: %s\nDestinasi: %s\nTanggal Berangkat: %s\n",
+                    jumlahTiket, totalHarga, maskapai, kotaKeberangkatan, destinasi, tanggalBerangkat
+            );
 
-        JOptionPane.showMessageDialog(this, message, " Rincian Pembayaran", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, message, " Rincian Pembayaran", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Maaf, tiket untuk penerbangan ini sudah habis.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+        }
+    } else {
+        JOptionPane.showMessageDialog(this, "Pilih penerbangan terlebih dahulu.", "Peringatan", JOptionPane.WARNING_MESSAGE);
     }
+}
+
+     
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -215,6 +230,7 @@ public class MenuCustomer extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
+        jLogout = new javax.swing.JButton();
         tfff9 = new javax.swing.JPanel();
         txtTotalBayar = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -402,6 +418,14 @@ public class MenuCustomer extends javax.swing.JFrame {
         jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jLogout.setText("Logout");
+        jLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jLogoutActionPerformed(evt);
+            }
+        });
+        jPanel5.add(jLogout, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 590, 90, 40));
+
         tfff9.setBackground(new java.awt.Color(53, 114, 239));
         tfff9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -427,7 +451,7 @@ public class MenuCustomer extends javax.swing.JFrame {
                 btnPesanActionPerformed(evt);
             }
         });
-        tfff9.add(btnPesan, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 280, 128, -1));
+        tfff9.add(btnPesan, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 280, 130, -1));
 
         btnCetakPembayaran.setText("Cetak Pembayaran");
         btnCetakPembayaran.addActionListener(new java.awt.event.ActionListener() {
@@ -438,8 +462,9 @@ public class MenuCustomer extends javax.swing.JFrame {
         tfff9.add(btnCetakPembayaran, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 310, -1, -1));
 
         jLabel15.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel15.setText("___________________________________________________________");
-        tfff9.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 260, 290, -1));
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel15.setText("______________________________________");
+        tfff9.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 260, 270, -1));
 
         tfMaskapai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -509,8 +534,9 @@ public class MenuCustomer extends javax.swing.JFrame {
         jPanel5.add(tfff9, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 220, 990, 360));
 
         jLabel14.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel14.setText("___________________________________________________________");
-        jPanel5.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 40, 290, -1));
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel14.setText("________________________________________");
+        jPanel5.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 40, 280, -1));
 
         jTablePesawat.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -638,11 +664,16 @@ public class MenuCustomer extends javax.swing.JFrame {
     }//GEN-LAST:event_minimizeMouseClicked
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // button cari penerbangan
         DefaultTableModel BTCari = (DefaultTableModel) jTablePesawat.getModel();
         TableRowSorter<DefaultTableModel> Cari = new TableRowSorter<>(BTCari);
         jTablePesawat.setRowSorter(Cari);
-        Cari.setRowFilter(RowFilter.regexFilter(txtCariPenerbangan.getText()));
+        String searchText = txtCariPenerbangan.getText();
+    
+        if (searchText.trim().length() == 0) {
+            Cari.setRowFilter(null);
+        } else{
+            Cari.setRowFilter(RowFilter.regexFilter("(?i)"+searchText));
+        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void txtCariPenerbanganActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCariPenerbanganActionPerformed
@@ -650,7 +681,7 @@ public class MenuCustomer extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCariPenerbanganActionPerformed
 
     private void btnPesanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesanActionPerformed
-        JOptionPane.showMessageDialog(this, "Berhasil!");
+        prosesBooking();
     }//GEN-LAST:event_btnPesanActionPerformed
 
     private void txtTotalBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalBayarActionPerformed
@@ -689,6 +720,14 @@ public class MenuCustomer extends javax.swing.JFrame {
         tfkursiTersedia.setEditable(false);
         txtTotalBayar.setEditable(false);
     }//GEN-LAST:event_formComponentShown
+
+    private void jLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jLogoutActionPerformed
+        Login1 Login1Frame = new Login1();
+        Login1Frame.setVisible(true);
+        Login1Frame.pack();
+        Login1Frame.setLocationRelativeTo(null);
+        this.dispose();
+    }//GEN-LAST:event_jLogoutActionPerformed
 
     /**
      * @param args the command line arguments
@@ -757,6 +796,7 @@ public class MenuCustomer extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JButton jLogout;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel5;

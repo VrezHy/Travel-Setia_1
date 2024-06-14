@@ -4,7 +4,7 @@
  */
 package travelsetia;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -48,7 +48,9 @@ public class MenuDashboard2 extends javax.swing.JPanel {
 
             int totalPesawat = 0;
             int totalkursiTerjual = 0;
-            ArrayList<String> uniqueBandara = new ArrayList<>();
+            HashSet<String> uniqueBandara = new HashSet<>();
+            
+            
 
             while (rs.next()) {
                 int kursiTersedia = rs.getInt("kursiTersedia");
@@ -61,6 +63,9 @@ public class MenuDashboard2 extends javax.swing.JPanel {
                 } else {
                     statusKursi = "habis";
                 }
+                
+                uniqueBandara.add(rs.getString("kotaKeberangkatan"));
+            
 
                 model.addRow(new Object[]{
                     rs.getInt("idPesawat"),
@@ -70,7 +75,8 @@ public class MenuDashboard2 extends javax.swing.JPanel {
                     rs.getString("tanggalKeberangkatan"),
                     kursiTersediaSetelahTerjual, // Menampilkan jumlah kursi tersedia setelah terjual
                     rs.getInt("harga"),
-                    statusKursi // Menampilkan status kursi
+                    statusKursi
+                    
                 });
                 totalPesawat++;
                 totalkursiTerjual += tiketTerjual;
@@ -81,9 +87,9 @@ public class MenuDashboard2 extends javax.swing.JPanel {
 
             int totalBandara = uniqueBandara.size();
 
-            labelUpdatePesawat.setText("Total Pesawat: " + totalPesawat);
-            labelUpdateKursi.setText("Kursi Terjual:" + totalkursiTerjual);
-            labelUpdateBandara.setText("Total Bandara" + totalBandara);
+            labelUpdatePesawat.setText("Total Pesawat : " + totalPesawat);
+            labelUpdateKursi.setText("Kursi Terjual : " + totalkursiTerjual);
+            labelUpdateBandara.setText("Total Bandara : " + totalBandara);
 
         } catch (Exception ex) {
             System.out.println("Error : " + ex.getMessage());
@@ -323,7 +329,7 @@ public class MenuDashboard2 extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(tabelDash);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 240, 730, 320));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 240, 760, 320));
 
         jLabel1.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(53, 114, 239));
@@ -334,15 +340,16 @@ public class MenuDashboard2 extends javax.swing.JPanel {
         jLabel2.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(53, 114, 239));
         jLabel2.setText("Master Data > Dashboard");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 0, 190, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 0, 200, 30));
 
         jLabel3.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(53, 114, 239));
         jLabel3.setText("JUMLAH YANG BEROPRASI");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 20, -1, -1));
 
+        iconDash.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         iconDash.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image_icon/Laptop Metrics.png"))); // NOI18N
-        jPanel1.add(iconDash, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 0, -1, -1));
+        jPanel1.add(iconDash, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 10, 40, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

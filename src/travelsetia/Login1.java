@@ -312,7 +312,7 @@ public class Login1 extends javax.swing.JFrame {
     }//GEN-LAST:event_btLoginLoginActionPerformed
 
     private void minimizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minimizeMouseClicked
-        // TODO add your handling code here:
+        // minimize layar (dimas)
         this.setExtendedState(Login1.ICONIFIED);
     }//GEN-LAST:event_minimizeMouseClicked
 
@@ -345,9 +345,7 @@ public class Login1 extends javax.swing.JFrame {
         register1Frame.setVisible(true);
         register1Frame.pack();
         register1Frame.setLocationRelativeTo(null);
-        this.dispose();
-                        
-                        
+        this.dispose();   
     }//GEN-LAST:event_SignUpLoginMouseClicked
 
     /**

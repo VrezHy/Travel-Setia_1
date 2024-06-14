@@ -457,7 +457,7 @@ public class MenuPesawat1 extends javax.swing.JPanel {
 
     private void tfKotaKeberangkatanFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfKotaKeberangkatanFocusLost
         if (tfKotaKeberangkatan.getText().equals("")) {
-            tfKotaKeberangkatan.setText("Kota Keberangkatan");
+            tfKotaKeberangkatan.setText("Kota Keberangkata");
             tfKotaKeberangkatan.setForeground(new Color(153, 153, 153));
         }
     }//GEN-LAST:event_tfKotaKeberangkatanFocusLost
